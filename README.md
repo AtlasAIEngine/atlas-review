@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="docs/assets/brand/atlas-icon.png" alt="Atlas Review compass icon" width="88" height="88" />
+
 # Atlas Review
 
 **Understand the change. Find the risk. Review with context.**
