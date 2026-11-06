@@ -20,7 +20,7 @@ import { createReviewRuntimeError } from '../review/reviewErrorClassification.js
 
 describe('reviewProviderExecution Google CLI fallback helpers', () => {
   it('forces Claude cli-pipe into single-turn no-tools mode', () => {
-    expect(buildClaudeCliPipeArgs(['claude'], 'claude-sonnet-4-6')).toEqual([
+    expect(buildClaudeCliPipeArgs(['claude'], 'claude-sonnet-5-5')).toEqual([
       'claude',
       '-p', '-',
       '--output-format', 'json',
@@ -31,9 +31,9 @@ describe('reviewProviderExecution Google CLI fallback helpers', () => {
   });
 
   it('normalizes Claude full model ids to CLI aliases for pipe mode', () => {
-    expect(resolveClaudeCliModelArg('claude-opus-4-7')).toBe('opus');
-    expect(resolveClaudeCliModelArg('claude-sonnet-4-6')).toBe('sonnet');
-    expect(resolveClaudeCliModelArg('claude-haiku-4-5-20251001')).toBe('haiku');
+    expect(resolveClaudeCliModelArg('claude-opus-5-5')).toBe('opus');
+    expect(resolveClaudeCliModelArg('claude-sonnet-5-5')).toBe('sonnet');
+    expect(resolveClaudeCliModelArg('claude-haiku-5-5')).toBe('haiku');
     expect(resolveClaudeCliModelArg('sonnet')).toBe('sonnet');
     expect(resolveClaudeCliModelArg('claude-sonnet-4-5-20250929')).toBe('claude-sonnet-4-5-20250929');
     expect(resolveClaudeCliModelArg('claude-sonnet-experimental-foo')).toBe('claude-sonnet-experimental-foo');
@@ -198,7 +198,7 @@ describe('reviewProviderExecution Google CLI fallback helpers', () => {
         cwd: '/Users/test/project',
         session_id: 'session-test',
         tools: ['Task', 'Bash', 'Read'],
-        model: 'claude-sonnet-4-6',
+        model: 'claude-sonnet-5-5',
       }),
     );
 
@@ -410,7 +410,7 @@ describe('reviewProviderExecution Google CLI fallback helpers', () => {
     // final turn — leading to displays like "12 in · 13,268 out" where
     // "12 in" is just the wrap-up turn. Summing per-turn must win.
     const rawStdout = [
-      JSON.stringify({ type: 'system', model: 'claude-sonnet-4-6' }),
+      JSON.stringify({ type: 'system', model: 'claude-sonnet-5-5' }),
       JSON.stringify({
         type: 'assistant',
         message: { usage: { input_tokens: 28000, output_tokens: 1400 } },

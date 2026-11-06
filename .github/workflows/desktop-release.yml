@@ -178,6 +178,9 @@ jobs:
         working-directory: apps/desktop
         run: npm run bundle-backend
 
+      - name: Smoke test bundled backend
+        run: node scripts/smoke-bundled-backend.mjs
+
       - name: Scan bundled source and generate notices
         shell: bash
         run: |
@@ -368,6 +371,9 @@ jobs:
       - name: Bundle backend for sidecar
         working-directory: apps/desktop
         run: npm run bundle-backend
+
+      - name: Smoke test bundled backend
+        run: node scripts/smoke-bundled-backend.mjs
 
       - name: Scan bundled source and generate notices
         shell: bash

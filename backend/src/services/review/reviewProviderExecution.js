@@ -742,7 +742,7 @@ async function callOpenAI(
       },
       body: JSON.stringify({
         model,
-        max_tokens: 16384,
+        ...(model.startsWith('gpt-6') ? { max_completion_tokens: 16384 } : { max_tokens: 16384 }),
         messages: [
           { role: 'system', content: 'You are a code review assistant. Return only valid JSON, no markdown fences.' },
           { role: 'user', content: prompt },
@@ -1187,6 +1187,7 @@ async function callCodexCLI(
   const isCodexModel = model && (
     model.includes('codex')
     || model.startsWith('gpt-5')
+    || model.startsWith('gpt-6')
     || model.startsWith('o3')
     || model.startsWith('o4')
   );

@@ -1,6 +1,6 @@
 [package]
 name = "atlasengine-desktop"
-version = "0.25.25"
+version = "0.25.26"
 description = "Atlas Review - local AI code review"
 authors = ["AtlasEngine"]
 license = "MIT"

@@ -122,7 +122,7 @@ describe('ClaudeAdapter', () => {
       model: 'claude-sonnet-experimental-foo',
     });
 
-    expect(currentSonnet.args).toContain('sonnet');
+    expect(currentSonnet.args).toContain('claude-sonnet-4-6');
     expect(pinnedSonnet.args).toContain('claude-sonnet-4-5-20250929');
     expect(experimentalSonnet.args).toContain('claude-sonnet-experimental-foo');
   });
@@ -214,11 +214,11 @@ describe('ClaudeAdapter', () => {
       expect(args).not.toContain('--model');
     });
 
-    it('normalizes Claude snapshot model IDs to CLI aliases', () => {
+    it('normalizes current Claude model IDs to CLI aliases', () => {
       const { args } = claudeAdapter.buildArgs({
         message: 'test',
         sessionId: 'id',
-        model: 'claude-sonnet-4-6',
+        model: 'claude-sonnet-5-5',
       });
       const modelFlagIndex = args.indexOf('--model');
       expect(modelFlagIndex).toBeGreaterThan(-1);
@@ -319,7 +319,7 @@ describe('ClaudeAdapter', () => {
       const { args } = claudeAdapter.buildAgenticArgs({
         message: 'review branch',
         sessionId: 'session-2',
-        model: 'claude-opus-4-7',
+        model: 'claude-opus-5-5',
         maxTurns: 8,
       });
       const modelFlagIndex = args.indexOf('--model');

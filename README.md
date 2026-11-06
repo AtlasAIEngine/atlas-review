@@ -44,6 +44,8 @@ npm run desktop:build:unsigned
 
 This creates a local installer without official updater signatures. It needs no maintainer credentials. `npm run desktop:dev` runs the native development app. Official releases use a separate signing workflow. Forks must supply their own update signing key and feed before distributing updates.
 
+See the [supported model catalog](docs/MODELS.md) for current Codex and Claude choices.
+
 ## MCP integration
 
 With the application running, preview detected agent setup:

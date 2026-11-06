@@ -31,11 +31,15 @@ const PROVIDER_CONFIGS = {
     testUrl: 'https://api.anthropic.com/v1/messages',
     defaultModel: 'claude-sonnet-4-6',
     models: [
-      { id: 'claude-opus-4-7', label: 'Claude Opus 4.7', cliAlias: 'opus', toolSupport: true },
+      { id: 'claude-opus-5-5', label: 'Claude Opus 5.5', cliAlias: 'opus', toolSupport: true },
+      { id: 'claude-sonnet-5-5', label: 'Claude Sonnet 5.5', cliAlias: 'sonnet', toolSupport: true },
+      { id: 'claude-haiku-5-5', label: 'Claude Haiku 5.5', cliAlias: 'haiku', toolSupport: true, reviewCapable: false },
+      { id: 'claude-fable-5-1', label: 'Claude Fable 5.1', cliAlias: 'claude-fable-5-1', toolSupport: true },
+      { id: 'claude-opus-4-7', label: 'Claude Opus 4.7', toolSupport: true },
       { id: 'claude-opus-4-6', label: 'Claude Opus 4.6', toolSupport: true },
-      { id: 'claude-sonnet-4-6', label: 'Claude Sonnet 4.6', cliAlias: 'sonnet', toolSupport: true },
+      { id: 'claude-sonnet-4-6', label: 'Claude Sonnet 4.6', toolSupport: true },
       { id: 'claude-sonnet-4-5-20250929', label: 'Claude Sonnet 4.5', toolSupport: true },
-      { id: 'claude-haiku-4-5-20251001', label: 'Claude Haiku 4.5', cliAlias: 'haiku', toolSupport: true, reviewCapable: false },
+      { id: 'claude-haiku-4-5-20251001', label: 'Claude Haiku 4.5', toolSupport: true, reviewCapable: false },
     ],
     headerKey: 'x-api-key',
     versionHeader: { 'anthropic-version': '2023-06-01' },
@@ -53,6 +57,11 @@ const PROVIDER_CONFIGS = {
     testUrl: 'https://api.openai.com/v1/models',
     defaultModel: 'gpt-5.5',
     models: [
+      { id: 'gpt-6.1-sol', label: 'GPT-6.1 Sol', toolSupport: false },
+      { id: 'gpt-6-astra', label: 'GPT-6 Astra', toolSupport: false },
+      { id: 'gpt-6.1-terra', label: 'GPT-6.1 Terra', toolSupport: false },
+      { id: 'gpt-6-luna', label: 'GPT-6 Luna', toolSupport: false },
+      { id: 'gpt-6-sol', label: 'GPT-6 Sol', toolSupport: false },
       { id: 'gpt-5.5', label: 'GPT-5.5', toolSupport: true },
       { id: 'gpt-5.4', label: 'GPT-5.4', toolSupport: true },
       { id: 'gpt-5.4-nano', label: 'GPT-5.4 Nano', toolSupport: true, reviewCapable: false },
@@ -142,6 +151,11 @@ const OPENAI_CODEX_CLI_SAFE_DEFAULT_MODEL = 'gpt-5.3-codex';
 const OPENAI_CODEX_CLI_PREFERRED_MODEL = 'gpt-5.5';
 const OPENAI_CODEX_CLI_AUTO_MODEL_ORDER = [
   OPENAI_CODEX_CLI_PREFERRED_MODEL,
+  'gpt-6.1-sol',
+  'gpt-6-astra',
+  'gpt-6.1-terra',
+  'gpt-6-luna',
+  'gpt-6-sol',
   'gpt-5.4',
   OPENAI_CODEX_CLI_SAFE_DEFAULT_MODEL,
 ];
@@ -3086,13 +3100,12 @@ function sanitizeProvider(provider) {
  */
 function getAnthropicCLIModels() {
   return PROVIDER_CONFIGS.anthropic.models
-    .filter(m => m.cliAlias)
     .map(m => ({
-      alias: m.cliAlias,
+      alias: m.cliAlias || m.id,
       name: m.label,
       description: m.cliAlias === 'opus' ? 'Most capable, best for complex tasks'
         : m.cliAlias === 'sonnet' ? 'Balanced performance and speed'
-        : 'Fastest, best for simple tasks',
+        : m.id.includes('haiku') ? 'Fast model for focused tasks' : 'Explicit Claude model version',
     }));
 }
 

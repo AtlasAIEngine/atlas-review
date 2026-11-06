@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "AtlasEngine",
-  "version": "0.25.25",
+  "version": "0.25.26",
   "identifier": "com.atlasengine.desktop",
   "build": {
     "frontendDist": "../../../frontend/dist",

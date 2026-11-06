@@ -95,8 +95,7 @@ describe('claudeBinary', () => {
     const managedClaude = path.join(appDataDir, 'cli-tools', 'bin', 'claude');
     const desktopManagedClaude = path.join(
       tempDir,
-      'Library',
-      'Application Support',
+      ...(process.platform === 'darwin' ? ['Library', 'Application Support'] : ['.local', 'share']),
       'com.atlasengine.desktop',
       'cli-tools',
       'bin',

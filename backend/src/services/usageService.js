@@ -27,6 +27,14 @@ const VALID_REVIEW_TYPES = new Set(['changeset', 'branch_review', 'pr_review', '
  */
 const EXACT_MODEL_COSTS = Object.freeze({
   // Anthropic
+  // Current standard rates verified on 2026-11-06; subscription usage is not API billing.
+  'anthropic/claude-fable-5-1': { input: 0.00001, output: 0.00005 },
+  'anthropic/claude-opus-5-5': { input: 0.000004, output: 0.00002 },
+  'anthropic/claude-sonnet-5-5': { input: 0.000002, output: 0.00001 },
+  'anthropic/claude-haiku-5-5': { tiers: [
+    { maxInputTokens: 100000, input: 0.0000001, output: 0.0000005 },
+    { input: 0.0000005, output: 0.0000025 },
+  ] },
   'anthropic/claude-opus-4-7': { input: 0.000005, output: 0.000025 },
   'anthropic/claude-opus-4-6': { input: 0.000005, output: 0.000025 },
   'anthropic/claude-sonnet-4-6': { input: 0.000003, output: 0.000015 },
@@ -37,6 +45,26 @@ const EXACT_MODEL_COSTS = Object.freeze({
   'anthropic/claude-3-opus-20240229': { input: 0.000015, output: 0.000075 },
 
   // OpenAI
+  'openai/gpt-6-astra': { tiers: [
+    { maxInputTokens: 272000, input: 1e-05, output: 5e-05 },
+    { input: 2e-05, output: 7.5e-05 },
+  ] },
+  'openai/gpt-6.1-sol': { tiers: [
+    { maxInputTokens: 272000, input: 2e-06, output: 1e-05 },
+    { input: 4e-06, output: 1.5e-05 },
+  ] },
+  'openai/gpt-6.1-terra': { tiers: [
+    { maxInputTokens: 272000, input: 1e-06, output: 5e-06 },
+    { input: 2e-06, output: 7.5e-06 },
+  ] },
+  'openai/gpt-6-luna': { tiers: [
+    { maxInputTokens: 272000, input: 1.0000000000000001e-07, output: 5e-07 },
+    { input: 2.0000000000000002e-07, output: 7.5e-07 },
+  ] },
+  'openai/gpt-6-sol': { tiers: [
+    { maxInputTokens: 272000, input: 2e-06, output: 1e-05 },
+    { input: 4e-06, output: 1.5e-05 },
+  ] },
   'openai/gpt-5.5': { input: 0.000005, output: 0.00003 },
   'openai/gpt-5.4': { input: 0.0000025, output: 0.000015 },
   'openai/gpt-5.4-nano': { input: 0.0000002, output: 0.00000125 },

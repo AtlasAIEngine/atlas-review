@@ -22,6 +22,12 @@ const execFileAsync = promisify(execFile);
  * Mapped to CLI-friendly format with aliases.
  */
 const CODEX_MODELS = [
+  { alias: 'gpt-6.1-sol', name: 'GPT-6.1 Sol', description: 'Available through compatible Codex CLI accounts' },
+  { alias: 'gpt-6-astra', name: 'GPT-6 Astra', description: 'Available through compatible Codex CLI accounts' },
+  { alias: 'gpt-6.1-terra', name: 'GPT-6.1 Terra', description: 'Available through compatible Codex CLI accounts' },
+  { alias: 'gpt-6-luna', name: 'GPT-6 Luna', description: 'Available through compatible Codex CLI accounts' },
+  { alias: 'gpt-6-sol', name: 'GPT-6 Sol', description: 'Available through compatible Codex CLI accounts' },
+
   { alias: 'gpt-5.5', name: 'GPT-5.5', description: 'Latest GPT-5 model available in Codex' },
   { alias: 'gpt-5.4', name: 'GPT-5.4', description: 'Previous GPT-5 model available in Codex' },
   { alias: 'gpt-5.4-nano', name: 'GPT-5.4 Nano', description: 'Lowest-cost GPT-5.4 variant' },

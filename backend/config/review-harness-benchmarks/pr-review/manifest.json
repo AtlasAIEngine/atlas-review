@@ -5,7 +5,7 @@
       "label": "unity_semantic_verifier",
       "source": "deterministic_evidence",
       "description": "Unity semantic evidence pipeline with anchored verifier signals and confidence-gated promotion.",
-      "config": "../project-black/unity-semantic-verifier.json"
+      "config": "unity-semantic-verifier.json"
     },
     {
       "id": "unity_stack_signals",
