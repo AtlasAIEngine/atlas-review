@@ -1608,6 +1608,8 @@ describe('providerService API-first routing', () => {
 
     try {
       const first = await providerService.getProviders();
+      // Reads return cached state while validation runs in the background.
+      await providerService.getPendingScanPromise();
       const firstProvider = first.providers.find((provider) => provider.id === 'cli_openai');
       const firstConfig = JSON.parse(await fs.readFile(configPath, 'utf8'));
       const firstPersisted = firstConfig.providers.find((provider) => provider.id === 'cli_openai');
