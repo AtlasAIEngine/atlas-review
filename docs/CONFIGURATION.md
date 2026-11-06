@@ -4,7 +4,9 @@ Local review runs with SQLite through `backend/server-desktop.js`. `npm run dev`
 
 ## Local profile
 
-Set `ATLAS_DATA_DIR` to an absolute writable directory for an isolated profile. Otherwise existing AtlasEngine data paths are retained: `~/Library/Application Support/AtlasEngine` on Mac, `%APPDATA%/AtlasEngine` on Windows, and `~/.local/share/AtlasEngine` on Linux. The profile contains the database, local configuration, logs, and token-encryption material. Back it up privately and never commit it.
+For the standalone backend (`npm run dev`), set `ATLAS_DATA_DIR` to an absolute writable directory for an isolated profile. Its fallback paths are `~/Library/Application Support/AtlasEngine` on Mac, `%APPDATA%/AtlasEngine` on Windows, and `~/.local/share/AtlasEngine` on Linux.
+
+The packaged desktop shell selects the existing identifier-based Tauri profile: `~/Library/Application Support/com.atlasengine.desktop` on Mac and `%APPDATA%/com.atlasengine.desktop` on Windows. Development or older installations can also have a `dev.atlasengine.desktop` profile. The profile contains the database, local configuration, logs, and token-encryption material. Back up the profile your app actually uses privately and never commit it.
 
 The application creates installation-specific encryption material. Configure AI providers in Settings or use a supported authenticated provider CLI. Do not place provider secrets in frontend `VITE_*` variables: those values become public in browser bundles.
 
