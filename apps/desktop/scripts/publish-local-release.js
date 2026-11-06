@@ -21,7 +21,7 @@ const __dirname = dirname(__filename);
 const desktopDir = dirname(__dirname);
 const projectRoot = resolve(desktopDir, '..', '..');
 const manifestScriptPath = join(projectRoot, 'scripts', 'generate-update-manifest.js');
-const publicReleaseRepo = 'AtlasAIEngine/atlas-review';
+const publicReleaseRepo = 'Loomtide/atlas-review';
 const allowedChannels = new Set(['stable', 'beta']);
 const requiredUpdaterPlatformsByChannel = {
   stable: ['darwin-aarch64', 'darwin-x86_64', 'windows-x86_64'],

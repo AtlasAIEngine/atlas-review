@@ -4,7 +4,7 @@ version = "0.25.26"
 description = "Atlas Review - local AI code review"
 authors = ["AtlasEngine"]
 license = "MIT"
-repository = "https://github.com/AtlasAIEngine/atlas-review"
+repository = "https://github.com/Loomtide/atlas-review"
 edition = "2021"
 rust-version = "1.77.2"
 

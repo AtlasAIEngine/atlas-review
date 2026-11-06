@@ -2,7 +2,7 @@
 
 Local-first AI code review for branches and pull requests, with a desktop app and MCP integration for coding agents.
 
-[Windows x64](https://github.com/AtlasAIEngine/atlas-review/releases/latest/download/AtlasReview-windows-x64-setup.exe) | [Mac Apple Silicon](https://github.com/AtlasAIEngine/atlas-review/releases/latest/download/AtlasReview-macos-aarch64.dmg) | [Mac Intel](https://github.com/AtlasAIEngine/atlas-review/releases/latest/download/AtlasReview-macos-x86_64.zip) | [All releases](https://github.com/AtlasAIEngine/atlas-review/releases)
+[Windows x64](https://github.com/Loomtide/atlas-review/releases/latest/download/AtlasReview-windows-x64-setup.exe) | [Mac Apple Silicon](https://github.com/Loomtide/atlas-review/releases/latest/download/AtlasReview-macos-aarch64.dmg) | [Mac Intel](https://github.com/Loomtide/atlas-review/releases/latest/download/AtlasReview-macos-x86_64.zip) | [All releases](https://github.com/Loomtide/atlas-review/releases)
 
 ![Atlas Review project dashboard on a fresh profile](docs/assets/dashboard.png)
 
@@ -26,7 +26,7 @@ Launch the app, configure a review provider in Settings, and import a local Git 
 Install Git and Node.js 22 (see [.nvmrc](.nvmrc)), then:
 
 ```sh
-git clone https://github.com/AtlasAIEngine/atlas-review.git
+git clone https://github.com/Loomtide/atlas-review.git
 cd atlas-review
 npm run setup
 npm run dev

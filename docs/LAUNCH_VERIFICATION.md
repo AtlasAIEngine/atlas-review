@@ -16,11 +16,11 @@ Atlas Review is prepared from the working source snapshot identified in SOURCE_M
 - Tracked-file checks and public documentation link checks passed.
 - A fresh-profile browser dashboard opened without JavaScript errors or backend 5xx responses. The README screenshot uses that empty profile.
 
-[Launch CI checks](https://github.com/AtlasAIEngine/atlas-review/actions/runs/42182882937) passed for source commit `8e457674dab5fa137ca32228f2f1943a34d6b8dd`. Installer provenance is recorded separately in each release's SOURCE.json.
+[Launch CI checks](https://github.com/Loomtide/atlas-review/actions/runs/42182882937) passed for source commit `8e457674dab5fa137ca32228f2f1943a34d6b8dd`. Installer provenance is recorded separately in each release's SOURCE.json.
 
 ## Installer checks
 
-[Release CI](https://github.com/AtlasAIEngine/atlas-review/actions/runs/42182890282) passed for all three platforms. The published 0.25.26 release contains 23 assets, including Windows EXE/MSI, Apple Silicon DMG, Intel Mac ZIP, updater payloads, checksums, source provenance, and dependency notices.
+[Release CI](https://github.com/Loomtide/atlas-review/actions/runs/42182890282) passed for all three platforms. The published 0.25.26 release contains 23 assets, including Windows EXE/MSI, Apple Silicon DMG, Intel Mac ZIP, updater payloads, checksums, source provenance, and dependency notices.
 
 Downloaded release assets passed SHA256SUMS verification, fixed-download alias comparison, and independent Ed25519 updater signature verification against the preserved application public key. SOURCE.json matches tag v0.25.26 at commit `8e457674dab5fa137ca32228f2f1943a34d6b8dd`.
 
@@ -43,3 +43,7 @@ At launch preparation on 2026-11-06, npm audit reported no high or critical advi
 ## Repository publication
 
 The repository is public under the MIT license, with fresh source history. GitHub private vulnerability reporting, secret scanning, and secret scanning push protection are enabled. Main requires the source and build checks, with force pushes and branch deletion disabled. Signing credentials are stored in GitHub Actions secrets, outside tracked source. GitHub secret scanning identified the deliberately vulnerable Stripe-shaped sample in the review-quality harness; the alert was resolved as used in tests after inspecting its fixture context. No production credential was involved.
+
+## Organization transfer
+
+On 2026-11-06 the repository moved from AtlasAIEngine/atlas-review to Loomtide/atlas-review. Release 0.25.26 binaries, signatures, source tag, and historical SOURCE.json provenance remain unchanged. The release stable manifest and its checksum were updated to reference the new organization. Existing installed updater URLs rely on GitHub's repository redirect; the source configuration now uses Loomtide directly for future builds. The legacy compatibility feed also points directly to Loomtide.
