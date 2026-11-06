@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { execFileSync } from 'child_process';
-import { existsSync, readdirSync } from 'fs';
+import { existsSync, readdirSync, openSync, readSync, closeSync } from 'fs';
 import { dirname, join, resolve } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -35,6 +35,19 @@ function run(command, args, options = {}) {
 }
 
 function isMachOBinary(filePath) {
+  // Avoid spawning `file` for thousands of JavaScript and metadata files.
+  let descriptor;
+  try {
+    descriptor = openSync(filePath, 'r');
+    const header = Buffer.alloc(4);
+    if (readSync(descriptor, header, 0, 4, 0) !== 4) return false;
+    const magic = header.toString('hex');
+    if (!['feedface', 'cefaedfe', 'feedfacf', 'cffaedfe', 'cafebabe', 'bebafeca', 'cafebabf', 'bfbafeca'].includes(magic)) return false;
+  } catch {
+    return false;
+  } finally {
+    if (descriptor !== undefined) closeSync(descriptor);
+  }
   try {
     const description = String(run('file', [filePath], { capture: true }));
     return description.includes('Mach-O');
