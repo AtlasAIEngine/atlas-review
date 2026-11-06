@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest';
+import { fileURLToPath } from 'node:url';
+const backendRoot = fileURLToPath(new URL('../../../', import.meta.url));
 import {
   DEFAULT_OUT_DIR,
   buildBenchmarkScorecard,
@@ -149,8 +151,8 @@ describe('reviewPrBenchmarkRunner.buildBenchmarkScorecard', () => {
 describe('reviewPrBenchmarkRunner.loadVariantConfig', () => {
   it('accepts pipeline feature toggles', async () => {
     const variant = await loadVariantConfig(
-      'config/review-harness-benchmarks/project-black/unity-semantic-verifier.json',
-      { cwd: '/tmp/atlas-review-source/backend' }
+      'config/review-harness-benchmarks/pr-review/unity-semantic-verifier.json',
+      { cwd: backendRoot }
     );
 
     expect(variant.config).toMatchObject({
@@ -164,8 +166,8 @@ describe('reviewPrBenchmarkRunner.loadVariantConfig', () => {
 
   it('accepts an explicit PR review mode', async () => {
     const variant = await loadVariantConfig(
-      'config/review-harness-benchmarks/project-black/terminal-like-pr-review.json',
-      { cwd: '/tmp/atlas-review-source/backend' }
+      'config/review-harness-benchmarks/pr-review/terminal-like-pr-review.json',
+      { cwd: backendRoot }
     );
 
     expect(variant.config).toMatchObject({

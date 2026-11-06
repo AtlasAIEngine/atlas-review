@@ -185,7 +185,7 @@ async function captureGitStatusSnapshot(projectPath) {
     return null;
   }
 
-  const simpleGit = (await import('simple-git')).default;
+  const simpleGit = (await import('simple-git')).simpleGit;
   const git = simpleGit(projectPath);
   const status = await git.status();
   const { newFiles, modifiedFiles } = collectStatusFileSets(status);
@@ -3916,7 +3916,7 @@ io.on('connection', (socket) => {
 
           if (BUILDER_RUN_POLICY.autoPush && !isPlanModeRequest && project.github_sync_enabled && project.github_repo_owner && project.github_repo_name) {
             try {
-              const simpleGit = (await import('simple-git')).default;
+              const simpleGit = (await import('simple-git')).simpleGit;
               const git = simpleGit(session.projectPath);
               const status = await git.status();
               if (status.modified.length > 0 || status.created.length > 0 || status.not_added.length > 0) {

@@ -13,7 +13,7 @@
  * - simple-git: High-level Git operations wrapper
  */
 
-import simpleGit from 'simple-git';
+import { simpleGit } from 'simple-git';
 import { spawn } from 'child_process';
 import path from 'path';
 import fs from 'fs/promises';

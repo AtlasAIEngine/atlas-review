@@ -280,8 +280,10 @@ function computeWordSegments(oldLine: string, newLine: string): { delSegments: D
 
 export function computeUnifiedDiff(before: string | null, after: string | null): DiffLine[] {
   // Cache lookup before any work — same inputs always produce same diff.
-  const beforeKey = before == null ? '∅' : `${before.length}:${fnv1aHashShort(before)}`;
-  const afterKey = after == null ? '∅' : `${after.length}:${fnv1aHashShort(after)}`;
+  const safeBefore = normalizeDiffInput(before);
+  const safeAfter = normalizeDiffInput(after);
+  const beforeKey = safeBefore == null ? 'null' : `${safeBefore.length}:${fnv1aHashShort(safeBefore)}`;
+  const afterKey = safeAfter == null ? 'null' : `${safeAfter.length}:${fnv1aHashShort(safeAfter)}`;
   const cacheKey = `${beforeKey}|${afterKey}`;
   const cached = computedDiffCache.get(cacheKey);
   if (cached) {
@@ -289,9 +291,6 @@ export function computeUnifiedDiff(before: string | null, after: string | null):
     computedDiffCache.set(cacheKey, cached);
     return cached;
   }
-  const safeBefore = normalizeDiffInput(before);
-  const safeAfter = normalizeDiffInput(after);
-
   if (safeBefore === null && safeAfter !== null) {
     return rememberInLru(computedDiffCache, cacheKey, safeAfter.split('\n').map((line, idx) => ({
       type: 'add' as const, content: line, oldNum: null, newNum: idx + 1,

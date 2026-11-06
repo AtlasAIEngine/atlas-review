@@ -26,7 +26,7 @@ test.describe('review chrome helpers', () => {
     });
 
     expect(getReviewActionButtonStyle({ tone: 'red', disabled: true })).toMatchObject({
-      background: 'var(--review-chip-neutral-bg)',
+      background: 'var(--review-control-muted-bg)',
       color: 'var(--text-tertiary)',
       border: '1px solid var(--review-shell-border)',
       cursor: 'not-allowed',

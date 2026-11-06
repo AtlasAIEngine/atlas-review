@@ -1,0 +1,7 @@
+{
+  "pipelineFeatures": {
+    "unitySemanticVerifier": {
+      "enabled": true
+    }
+  }
+}

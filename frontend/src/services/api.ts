@@ -66,8 +66,8 @@ import { buildReviewRecommendationKey, normalizeRecommendationKeyPart } from '@/
 import { getBrowserDefaultApiBaseUrl } from '@/utils/apiBaseUrl';
 
 // Dynamic API base URL - can be changed at runtime for desktop mode
-const _DESKTOP_PORT = import.meta.env.VITE_DESKTOP_BACKEND_PORT;
-let _rawBaseUrl = import.meta.env.VITE_API_BASE_URL
+const _DESKTOP_PORT = import.meta.env?.VITE_DESKTOP_BACKEND_PORT;
+let _rawBaseUrl = import.meta.env?.VITE_API_BASE_URL
   || (_DESKTOP_PORT ? `http://127.0.0.1:${_DESKTOP_PORT}/api` : getBrowserDefaultApiBaseUrl());
 
 // Normalise: all backend routes are mounted under /api, so ensure the base
