@@ -50,6 +50,8 @@ beforeEach(async () => {
   originalDbType = process.env.ATLAS_DB_TYPE;
   originalCodexModelRefreshTtlMs = process.env.ATLAS_CODEX_MODEL_REFRESH_TTL_MS;
   originalAtlasAppVersion = process.env.ATLAS_APP_VERSION;
+  // This suite explicitly exercises detection against its isolated credential fixtures.
+  delete process.env.ATLAS_DISABLE_CLI_PROVIDER_DETECTION;
   process.env.ATLAS_DATA_DIR = tempDataDir;
   process.env.ATLAS_DB_TYPE = 'sqlite';
   process.env.ENCRYPTION_KEY = Buffer.alloc(32, 7).toString('base64');

@@ -5,6 +5,7 @@
  */
 
 import fs from 'fs/promises';
+import { randomUUID } from 'node:crypto';
 import fsSync from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -520,7 +521,13 @@ async function saveGlobalConfig() {
     activeProviderId,
     updatedAt: new Date().toISOString(),
   };
-  await fs.writeFile(configPath, JSON.stringify(data, null, 2), 'utf8');
+  const temporaryPath = `${configPath}.${process.pid}.${randomUUID()}.tmp`;
+  try {
+    await fs.writeFile(temporaryPath, JSON.stringify(data, null, 2), { encoding: 'utf8', mode: 0o600 });
+    await fs.rename(temporaryPath, configPath);
+  } finally {
+    await fs.rm(temporaryPath, { force: true });
+  }
 }
 
 /**

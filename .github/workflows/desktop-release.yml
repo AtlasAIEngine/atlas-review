@@ -10,9 +10,6 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: desktop-release
-  cancel-in-progress: false
 
 env:
   CARGO_TERM_COLOR: always
@@ -454,6 +451,9 @@ jobs:
           retention-days: 7
 
   release:
+    concurrency:
+      group: desktop-release-publish
+      cancel-in-progress: false
     needs: [validate, build-macos, build-windows]
     runs-on: ubuntu-latest
     permissions:

@@ -6,7 +6,7 @@ const target = process.platform === 'win32' ? 'x86_64-pc-windows-msvc.exe' : pro
 const profile = mkdtempSync(join(tmpdir(),'atlas-review-bundle-smoke-'));
 const node = resolve('apps/desktop/src-tauri/binaries',`node-${target}`);
 const cwd = resolve('apps/desktop/src-tauri/resources/backend');
-const child = spawn(node,['server-desktop.js'],{cwd,env:{...process.env,ATLAS_DATA_DIR:profile,PORT:'0',ATLAS_DISABLE_CLI_PROVIDER_DETECTION:'true',ATLAS_REVIEW_SYNC_SERVER_URL:''},stdio:['ignore','pipe','pipe']});
+const child = spawn(node,['server-desktop.js'],{cwd,env:{...process.env,ATLAS_DATA_DIR:profile,PORT:'0',ATLAS_DISABLE_CLI_PROVIDER_DETECTION:'1',ATLAS_REVIEW_SYNC_SERVER_URL:''},stdio:['ignore','pipe','pipe']});
 let logs='';let spawnError=null;
 child.stdout.on('data',data=>{logs+=data;});
 child.stderr.on('data',data=>{logs+=data;});
