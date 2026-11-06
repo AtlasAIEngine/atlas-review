@@ -527,6 +527,10 @@ function copyBackendCode() {
     '.git',
     '.env',
     '.env.local',
+    'uploads',
+    'logs',
+    '.artifacts',
+    '.npm-cache',
     'projects', // User projects
     '.DS_Store',
     'coverage',

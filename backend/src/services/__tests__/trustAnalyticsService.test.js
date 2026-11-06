@@ -275,6 +275,7 @@ describe('trustAnalyticsService', () => {
     }));
     expect(summary.scope).toBe('all');
     expect(summary.scopeBreakdown).toEqual({
+      workspaceReviewCount: 0,
       branchScopedCount: 3,
       branchReviewCount: 1,
       changesetCount: 2,
@@ -341,6 +342,7 @@ describe('trustAnalyticsService', () => {
     expect(summary.reviewType).toBe('pr_review');
     expect(summary.reviewCount).toBe(1);
     expect(summary.scopeBreakdown).toEqual({
+      workspaceReviewCount: 0,
       branchScopedCount: 0,
       branchReviewCount: 0,
       changesetCount: 0,
@@ -663,6 +665,7 @@ describe('trustAnalyticsService', () => {
     expect(branchReviewService.getByProject).toHaveBeenCalledWith('proj-black');
     expect(summary.reviewCount).toBe(1);
     expect(summary.scopeBreakdown).toEqual({
+      workspaceReviewCount: 0,
       branchScopedCount: 1,
       branchReviewCount: 1,
       changesetCount: 0,

@@ -201,6 +201,7 @@ describe('cliInstallService PATH entry selection', () => {
     );
     await fs.mkdir(path.dirname(nativeExe), { recursive: true });
     await fs.writeFile(nativeExe, '', 'utf8');
+    await fs.chmod(nativeExe, 0o755);
 
     expect(
       cliInstallService.resolveWindowsCodexExecutablePath(path.join(prefix, 'codex.cmd'), {
@@ -227,6 +228,7 @@ describe('cliInstallService PATH entry selection', () => {
     );
     await fs.mkdir(path.dirname(nativeExe), { recursive: true });
     await fs.writeFile(nativeExe, '', 'utf8');
+    await fs.chmod(nativeExe, 0o755);
 
     expect(
       cliInstallService.resolveWindowsCodexExecutablePath(

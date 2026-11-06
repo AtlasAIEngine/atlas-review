@@ -4,6 +4,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { join } from 'node:path';
 
 import {
   isCliAgenticExecutionEnabled,
@@ -1131,6 +1132,9 @@ describe('buildCliSpawnEnv', () => {
 
 describe('resolveCliSpawnInvocation', () => {
   it('wraps Windows batch shims in a shell command line', () => {
+    const platformDescriptor = Object.getOwnPropertyDescriptor(process, 'platform');
+    Object.defineProperty(process, 'platform', { value: 'win32', configurable: true });
+    try {
     const invocation = resolveCliSpawnInvocation(
       'C:\\Users\\Test User\\AppData\\Local\\Microsoft\\WinGet\\Links\\opencode.cmd',
       ['run', '--format', 'json', '--model', 'openai/gpt-5']
@@ -1141,9 +1145,13 @@ describe('resolveCliSpawnInvocation', () => {
       args: [],
       shell: true,
     });
+    } finally { Object.defineProperty(process, 'platform', platformDescriptor); }
   });
 
   it('wraps Windows PowerShell shims with powershell.exe', () => {
+    const platformDescriptor = Object.getOwnPropertyDescriptor(process, 'platform');
+    Object.defineProperty(process, 'platform', { value: 'win32', configurable: true });
+    try {
     const originalSystemRoot = process.env.SystemRoot;
     process.env.SystemRoot = 'C:\\Windows';
     try {
@@ -1153,7 +1161,7 @@ describe('resolveCliSpawnInvocation', () => {
       );
 
       expect(invocation).toEqual({
-        command: 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe',
+        command: join('C:\\Windows', 'System32', 'WindowsPowerShell', 'v1.0', 'powershell.exe'),
         args: [
           '-NoLogo',
           '-NoProfile',
@@ -1175,6 +1183,7 @@ describe('resolveCliSpawnInvocation', () => {
         process.env.SystemRoot = originalSystemRoot;
       }
     }
+    } finally { Object.defineProperty(process, 'platform', platformDescriptor); }
   });
 
   it('leaves non-Windows executables unchanged', () => {
@@ -1392,8 +1401,9 @@ describe('isWriteTool', () => {
   it('returns true for Write', () => {
     expect(isWriteTool('Write')).toBe(true);
   });
-  it('returns true for FileChange', () => {
-    expect(isWriteTool('FileChange')).toBe(true);
+  it('requires an explicit mutation action for FileChange', () => {
+    expect(isWriteTool('FileChange')).toBe(false);
+    expect(isWriteTool('FileChange', { action: 'edit' })).toBe(true);
   });
   it('returns true for NotebookEdit', () => {
     expect(isWriteTool('NotebookEdit')).toBe(true);
@@ -1670,7 +1680,7 @@ describe('partitionFilesForParallelAgenticReview', () => {
 
   it('produces balanced shards for large input', () => {
     const hints = makeHints(60);
-    const shards = partitionFilesForParallelAgenticReview(hints, { minFilesPerShard: 15, maxShards: 4 });
+    const shards = partitionFilesForParallelAgenticReview(hints, { minFilesPerShard: 15, targetFilesPerShard: 15, maxShards: 4 });
     expect(shards.length).toBeGreaterThanOrEqual(2);
     expect(shards.length).toBeLessThanOrEqual(4);
     // Verify all files present
@@ -1680,7 +1690,7 @@ describe('partitionFilesForParallelAgenticReview', () => {
 
   it('distributes risk via round-robin', () => {
     const hints = makeHints(30);
-    const shards = partitionFilesForParallelAgenticReview(hints, { minFilesPerShard: 15, maxShards: 4 });
+    const shards = partitionFilesForParallelAgenticReview(hints, { minFilesPerShard: 15, targetFilesPerShard: 15, maxShards: 4 });
     // With 30 files and minPerShard=15, should get 2 shards
     expect(shards).toHaveLength(2);
     // First shard gets indices 0,2,4,... (highest risk spread)

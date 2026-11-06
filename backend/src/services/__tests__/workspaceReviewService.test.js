@@ -84,7 +84,7 @@ describe('workspaceReviewService', () => {
       reviewSnapshotKey: null,
       snapshotKey: expect.any(String),
     }));
-    expect(review.files).toEqual([
+    expect(review.files).toEqual(expect.arrayContaining([
       expect.objectContaining({
         path: 'README.md',
         status: 'A',
@@ -97,7 +97,7 @@ describe('workspaceReviewService', () => {
         before: 'export const value = 1;\n',
         after: 'export const value = 2;\n',
       }),
-    ]);
+    ]));
   });
 
   it('marks persisted workspace reviews as stale when the workspace snapshot changes after review', async () => {

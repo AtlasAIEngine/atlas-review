@@ -29,10 +29,12 @@ jobs:
           node-version: '22'
       - run: npm ci
       - run: npm ci --prefix frontend
+      - run: npm audit --prefix frontend --omit=dev --audit-level=high
       - run: npm --prefix frontend run build
       - run: npm --prefix frontend run test:unit
       - run: npm ci --prefix backend
-      - run: npm --prefix backend test -- src/services/__tests__/reviewSyncSettings.test.js src/services/__tests__/verificationService.test.js src/utils/__tests__/desktopEncryptionKey.test.js
+      - run: npm audit --prefix backend --omit=dev --audit-level=high
+      - run: npm --prefix backend test
       - run: npm --prefix backend run verify:fresh-install-bootstrap
       - run: npm ci --prefix mcp-review-server
       - run: npm --prefix mcp-review-server test

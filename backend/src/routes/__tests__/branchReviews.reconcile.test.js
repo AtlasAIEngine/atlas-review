@@ -1998,6 +1998,7 @@ describe('Branch review lifecycle reconciliation', () => {
     await callRouteHandler(branchReviewsRouter, 'post', '/proj-1/branch-reviews/br-6/review', req, res);
 
     expect(reviewService.reviewBranchReview).toHaveBeenCalledWith('/tmp/project', 'br-6', {
+      codegraphMcpEnabledOverride: null,
       force: true,
       externalSignal: expect.any(AbortSignal),
       onHeartbeat: expect.any(Function),

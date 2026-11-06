@@ -732,7 +732,7 @@ describe('PR review GitHub publication routes', () => {
     db.query.mockResolvedValueOnce({
       rows: [
         { installation_id: 123, account_login: 'AtlasAIEngine', account_type: 'Organization' },
-        { installation_id: -101, account_login: 'avinash-atlas', account_type: 'User' },
+        { installation_id: -101, account_login: 'AtlasAIEngine', account_type: 'User' },
       ],
     });
     prReviewService.getByProject.mockResolvedValueOnce([]);
@@ -757,9 +757,9 @@ describe('PR review GitHub publication routes', () => {
 
     expect(res.status).toHaveBeenCalledWith(403);
     expect(res.json).toHaveBeenCalledWith({
-      error: 'The connected GitHub account (avinash-atlas) cannot access pull requests for example-org-Github/ExampleProject. Reconnect GitHub with an account that has repo access, or grant the Atlas GitHub App access to this repository.',
+      error: 'The connected GitHub account (AtlasAIEngine) cannot access pull requests for example-org-Github/ExampleProject. Reconnect GitHub with an account that has repo access, or grant the Atlas GitHub App access to this repository.',
       code: 'GITHUB_REPO_ACCESS_DENIED',
-      connectedLogin: 'avinash-atlas',
+      connectedLogin: 'AtlasAIEngine',
       owner: 'example-org-Github',
       repo: 'ExampleProject',
     });

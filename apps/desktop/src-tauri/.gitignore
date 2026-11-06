@@ -12,3 +12,8 @@
 /resources/mcp-review-server/
 /resources/atlas-runtime-fingerprint.txt
 /resources/atlas-runtime-manifest.json
+
+# Generated distribution notices
+/resources/node-LICENSE.txt
+/resources/DEPENDENCY_NOTICES.json
+/resources/RUST_DEPENDENCY_NOTICES.json

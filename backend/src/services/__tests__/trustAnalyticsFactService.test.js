@@ -60,6 +60,7 @@ vi.mock('../trustAnalyticsService.js', () => ({
   getChangesetTrustAnalytics: (...args) => getChangesetTrustAnalyticsMock(...args),
   getBranchReviewTrustAnalytics: (...args) => getBranchReviewTrustAnalyticsMock(...args),
   getPrReviewTrustAnalytics: (...args) => getPrReviewTrustAnalyticsMock(...args),
+  getWorkspaceReviewTrustAnalytics: vi.fn(),
 }));
 
 import trustAnalyticsFactService, {
@@ -345,7 +346,7 @@ describe('trustAnalyticsFactService', () => {
       dimensionRowCount: 2,
     }));
     expect(transactionMock).toHaveBeenCalledTimes(1);
-    expect(queryMock).toHaveBeenCalledTimes(4);
+    expect(queryMock).toHaveBeenCalledTimes(6);
     expect(queryMock.mock.calls[0][0]).toContain('INSERT INTO trust_review_facts');
     expect(queryMock.mock.calls[1][0]).toContain('DELETE FROM trust_review_dimension_facts');
     expect(queryMock.mock.calls[2][0]).toContain('INSERT INTO trust_review_dimension_facts');
