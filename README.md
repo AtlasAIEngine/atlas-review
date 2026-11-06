@@ -12,7 +12,7 @@ Local-first AI code review with guided code walkthroughs, an organized PR inbox,
 [![Release](https://img.shields.io/github/v/release/Loomtide/atlas-review)](https://github.com/Loomtide/atlas-review/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-<a href="https://youtu.be/FYymR-1wp4w"><img src="docs/assets/readme/product-demo.png" alt="Atlas displays inline review findings while Claude Code uses Atlas MCP to investigate and fix them. Watch the product demo." width="880" /></a>
+<a href="https://youtu.be/FYymR-1wp4w"><img src="docs/assets/readme/product-demo.gif" alt="Atlas displays inline review findings while Claude Code uses Atlas MCP to investigate and fix them. Watch the product demo." width="820" /></a>
 
 **[Watch the 19-second demo](https://youtu.be/FYymR-1wp4w)** · [View the MP4](docs/assets/readme/product-demo.mp4)
 
