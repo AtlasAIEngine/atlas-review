@@ -2,6 +2,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import db from '../db/index.js';
+import { getPendingMigrations } from '../db/migrations/index.js';
 
 function fail(message) {
   console.error(message);
@@ -28,9 +29,9 @@ async function main() {
     'SELECT version, description FROM schema_version ORDER BY version'
   );
 
-  if (!Array.isArray(rows) || rows.length !== 1) {
+  if (!Array.isArray(rows) || rows.length === 0) {
     fail(
-      `Expected exactly one launch baseline row in schema_version, found ${rows?.length ?? 0}.`
+      `Expected launch migrations in schema_version, found ${rows?.length ?? 0}.`
     );
     return;
   }
@@ -43,7 +44,13 @@ async function main() {
     return;
   }
 
-  console.log('Fresh-install bootstrap verified.');
+  const pending = await getPendingMigrations(db);
+  if (pending.length > 0) throw new Error(`Unapplied migrations: ${pending.length}`);
+  const initializedAgain = await db.initialize();
+  if (!initializedAgain) throw new Error('Repeat initialization failed');
+  const after = await db.query('SELECT version FROM schema_version ORDER BY version');
+  if (after.rows.length !== rows.length) throw new Error('Repeat initialization changed the migration ledger');
+  console.log('Fresh-install bootstrap and repeat initialization verified.');
   console.log(
     JSON.stringify(
       {

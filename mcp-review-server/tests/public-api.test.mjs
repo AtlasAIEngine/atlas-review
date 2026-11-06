@@ -315,9 +315,9 @@ Use Atlas MCP when the user explicitly asks for Atlas review.
   });
 
   assert.equal(result.agent.workflowGuidanceState.status, 'installed');
-  assert.equal(result.agent.workflowGuidanceState.label, 'Installed');
+  assert.equal(result.agent.workflowGuidanceState.label, 'Managed global default active');
   assert.equal(result.agent.workflowGuidanceState.detectedPath, skillPath);
-  assert.match(result.agent.workflowGuidanceState.summary, /Detected the global Codex Atlas skill/u);
+  assert.match(result.agent.workflowGuidanceState.summary, /Detected the Atlas-managed global Codex skill/u);
 });
 
 test('installWorkflowGuidance writes the canonical codex global skill and becomes detectable', async (t) => {
@@ -524,7 +524,7 @@ test('syncAgentSetup does not fail shipped MCP-only agents that lack a managed w
   const result = await syncAgentSetup({
     homeDir: tempRoot,
     cwd: tempRoot,
-    platform: 'linux',
+    platform: 'darwin',
     selectedAgentIds: ['codex', 'claude-code', 'gemini', 'claude-desktop', 'vscode'],
     removeUnselected: true,
   });
@@ -603,7 +603,7 @@ test('getSetupRuntimeStatus exposes shared CLI guidance for shipped auto-write a
   assert.match(runtimeStatus.recommendedCommands.autoDryRun, /--dry-run/u);
   assert.match(runtimeStatus.setupSeparationSummary, /full Atlas-managed global bundle when supported/u);
   assert.match(runtimeStatus.workflowPolicySummary, /Atlas-named review prompts/u);
-  assert.match(runtimeStatus.remediation, /auto-setup for shipped agents/u);
+  assert.match(runtimeStatus.remediation, /sync the shipped agents/u);
 });
 
 test('getSetupRuntimeStatus preserves non-http backend URLs without throwing so degraded guidance stays renderable', () => {
