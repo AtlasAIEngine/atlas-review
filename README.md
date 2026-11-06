@@ -6,15 +6,15 @@
 
 Local-first AI code review with guided code walkthroughs, an organized PR inbox, and MCP integration for your coding agent.
 
-[Install](#install) · [Walkthroughs](#understand-the-change-with-code-walkthroughs) · [Pull requests](#organize-your-pull-requests) · [Agent integration](#review-with-your-coding-agent) · [Contribute](#contribute) · [Website](https://www.atlasengine.dev/)
+[Install](#install) · [Walkthroughs](#understand-the-change-with-code-walkthroughs) · [Pull requests](#organize-your-pull-requests) · [Agent integration](#review-with-your-coding-agent) · [Contribute](#contribute) · [YouTube](https://www.youtube.com/@LoomtideAI)
 
 [![Checks](https://github.com/Loomtide/atlas-review/actions/workflows/checks.yml/badge.svg)](https://github.com/Loomtide/atlas-review/actions/workflows/checks.yml)
 [![Release](https://img.shields.io/github/v/release/Loomtide/atlas-review)](https://github.com/Loomtide/atlas-review/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-<a href="https://www.atlasengine.dev/#demo"><img src="docs/assets/readme/product-demo.png" alt="Atlas displays inline review findings while Claude Code uses Atlas MCP to investigate and fix them. Watch the product demo." width="880" /></a>
+<a href="https://youtu.be/FYymR-1wp4w"><img src="docs/assets/readme/product-demo.png" alt="Atlas displays inline review findings while Claude Code uses Atlas MCP to investigate and fix them. Watch the product demo." width="880" /></a>
 
-**[Watch the 19-second demo](https://www.atlasengine.dev/#demo)** · [View the MP4](docs/assets/readme/product-demo.mp4)
+**[Watch the 19-second demo](https://youtu.be/FYymR-1wp4w)** · [View the MP4](docs/assets/readme/product-demo.mp4)
 
 </div>
 
@@ -58,13 +58,13 @@ Read inline findings, ask Atlas about a change, and draft replies with the diff 
 
 ![Review chat beside a scoped code diff and GitHub conversation, with a draft reply ready for inspection](docs/assets/readme/review-chat.png)
 
-[Watch the PR review clip](docs/assets/readme/pull-request-review.webm)
+[Watch the PR review clip on YouTube](https://youtu.be/kFwrdiDfIzU)
 
 ## Review your branch before opening a PR
 
 Run a review against a local branch before pushing to GitHub. Inspect findings and walkthroughs while the code is still fresh, fix issues, and review the updated branch from the same application.
 
-[Watch the 9-second branch review demo](docs/assets/readme/branch-review.mp4)
+[Watch the 9-second branch review demo on YouTube](https://youtu.be/9h1fay9hpSk)
 
 ## Review with your coding agent
 
