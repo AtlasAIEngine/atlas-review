@@ -1,0 +1,31 @@
+export const TOOL_NAMES = {
+  status: 'atlas_review_status',
+  waitForTerminal: 'atlas_review_wait_for_terminal',
+  githubPublications: 'atlas_review_github_publications',
+  githubPublish: 'atlas_review_github_publish',
+  latest: 'atlas_review_latest',
+  configGet: 'atlas_review_config_get',
+  configSetStrategy: 'atlas_review_config_set_strategy',
+  file: 'atlas_review_file',
+  outcomeGet: 'atlas_review_outcome_get',
+  outcomeSet: 'atlas_review_outcome_set',
+  outcomeClear: 'atlas_review_outcome_clear',
+  runCurrent: 'atlas_review_run_current',
+  queueCancel: 'atlas_review_queue_cancel',
+} as const;
+
+export const LEGACY_TOOL_NAMES = {
+  status: 'atlas_review.status',
+  waitForTerminal: 'atlas_review.wait_for_terminal',
+  githubPublications: 'atlas_review.github_publications',
+  githubPublish: 'atlas_review.github_publish',
+  latest: 'atlas_review.latest',
+  configGet: 'atlas_review.config_get',
+  configSetStrategy: 'atlas_review.config_set_strategy',
+  file: 'atlas_review.file',
+  outcomeGet: 'atlas_review.outcome_get',
+  outcomeSet: 'atlas_review.outcome_set',
+  outcomeClear: 'atlas_review.outcome_clear',
+  runCurrent: 'atlas_review.run_current',
+  queueCancel: 'atlas_review.queue_cancel',
+} as const;

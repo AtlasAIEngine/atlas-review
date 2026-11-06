@@ -1,0 +1,15 @@
+{
+  "label": "historical_review_learnings",
+  "promptMetadataOverrides": {
+    "additionalPromptContextBlocks": [
+      {
+        "id": "historical_review_learnings",
+        "title": "### Atlas Local Context: Historical Review Learnings",
+        "lines": [
+          "Recurring reopened findings involve missing unsubscribe symmetry, serialized field null regressions after prefab changes, and asmdef dependency drift.",
+          "Prefer findings that connect the current diff to one of these recurring failure modes."
+        ]
+      }
+    ]
+  }
+}

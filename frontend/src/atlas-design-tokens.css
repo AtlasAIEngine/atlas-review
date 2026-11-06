@@ -1,0 +1,377 @@
+/* ============================================
+   AtlasEngine Review UI — Design Tokens
+   ============================================
+   Direction C palette: restrained monochrome dark base,
+   single slate-blue accent. Light palette is hand-tuned
+   (no design source) to preserve contrast and accent identity.
+
+   Token layer is the only place hex literals live. All
+   components must read these via var(--name).
+   ============================================ */
+
+/* ---- Theme-agnostic tokens ---- */
+:root {
+  /* ---- TYPOGRAPHY ---- */
+  --font-ui: ui-sans-serif, -apple-system, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-sans: var(--font-ui);
+  --font-display: var(--font-ui);
+
+  --text-xs:  11px;
+  --text-sm:  12px;
+  --text-md:  13px;
+  --text-lg:  15px;
+  --text-xl:  20px;
+  --text-2xl: 28px;
+
+  /* ---- SPACING ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* ---- RADII ---- */
+  --radius-sm: 4px;
+  --radius-md: 5px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-full: 9999px;
+
+  /* ---- TRANSITIONS ---- */
+  --transition-fast: 0.1s ease;
+  --transition-default: 0.15s ease;
+  --transition-slow: 0.3s ease;
+
+  /* ---- LAYOUT ---- */
+  --panel-left-width: 240px;
+  --panel-right-width: 280px;
+  --diff-line-height: 20px;
+  --diff-font-size: 12px;
+  --line-num-width: 48px;
+}
+
+/* ---- Dark theme (default) ---- */
+:root, html.dark {
+  /* SURFACES (Direction C — restrained monochrome) */
+  --bg-base-rgb:      12 13 14;    /* #0c0d0e */
+  --bg-surface-rgb:   20 21 23;    /* #141517 */
+  --bg-surface-raised-rgb: 26 27 30; /* #1a1b1e */
+  --bg-elevated-rgb:  26 27 30;    /* #1a1b1e */
+  --bg-overlay-rgb:   32 33 36;
+  --bg-hover-rgb:     38 40 44;
+
+  --bg-base:      rgb(var(--bg-base-rgb));
+  --bg-surface:   rgb(var(--bg-surface-rgb));
+  --bg-surface-raised: rgb(var(--bg-surface-raised-rgb));
+  --bg-elevated:  rgb(var(--bg-elevated-rgb));
+  --bg-overlay:   rgb(var(--bg-overlay-rgb));
+  --bg-hover:     rgb(var(--bg-hover-rgb));
+
+  /* BORDERS */
+  --border-default: #26282c;
+  --border-muted:   #1e2023;
+  --border-strong:  #3a3d42;
+  --border-code:    #26282c;
+
+  --border-default-rgb: 38 40 44;
+  --border-muted-rgb:   30 32 35;
+  --border-strong-rgb:  58 61 66;
+
+  /* TEXT */
+  --text-primary:   #e8e9eb;
+  --text-secondary: #9aa0a6;
+  --text-tertiary:  #6b7076;
+  --text-link:      #8aa0c7;
+
+  --text-primary-rgb:   232 233 235;
+  --text-secondary-rgb: 154 160 166;
+  --text-secondary-bright-rgb: 200 204 210;
+  --text-secondary-bright: rgb(var(--text-secondary-bright-rgb));
+  --text-tertiary-rgb:  107 112 118;
+  --text-link-rgb:      138 160 199;
+
+  /* ACCENT — single slate-blue accent */
+  --accent-blue:        #8aa0c7;
+  --accent-blue-strong: #9fb3d6;
+  --accent-green:       #6ea583;   /* ok */
+  --accent-red:         #e06b5b;   /* high severity */
+  --accent-yellow:      #d9a441;   /* med severity */
+  --accent-purple:      #7a8cb8;   /* low severity (muted slate) */
+  --accent-orange:      #d4a574;
+
+  --accent-blue-rgb:    138 160 199;
+  --accent-green-rgb:   110 165 131;
+  --accent-red-rgb:     224 107 91;
+  --accent-yellow-rgb:  217 164 65;
+  --accent-purple-rgb:  122 140 184;
+  --accent-orange-rgb:  212 165 116;
+
+  /* SEVERITY — match severity intent (same values, named semantic) */
+  --sev-high:   var(--accent-red);
+  --sev-med:    var(--accent-yellow);
+  --sev-low:    var(--accent-purple);
+  --sev-ok:     var(--accent-green);
+
+  /* DIFF TOKENIZER — 3-color restrained palette */
+  --diff-token-keyword: #8aa8d6;
+  --diff-token-string:  #c8a97e;
+  --diff-token-comment: #6a6f76;
+  --diff-token-number:  #c8a97e;
+
+  /* DIFF RENDERING — row tints at 10% alpha work on both themes */
+  --diff-add-bg:    rgba(110, 165, 131, 0.10);
+  --diff-del-bg:    rgba(224, 107, 91, 0.10);
+  --diff-add-line:  rgba(110, 165, 131, 0.14);
+  --diff-del-line:  rgba(224, 107, 91, 0.14);
+  --diff-add-char:  rgba(110, 165, 131, 0.28);
+  --diff-del-char:  rgba(224, 107, 91, 0.28);
+  --diff-add-symbol: rgb(121, 180, 142);
+  --diff-del-symbol: rgb(235, 130, 115);
+  --diff-hunk-bg:   rgba(138, 160, 199, 0.08);
+  --diff-gutter-border: rgba(255, 255, 255, 0.04);
+
+  /* CONFIDENCE OVERLAY */
+  --conf-high:      transparent;
+  --conf-medium:    rgba(217, 164, 65, 0.55);
+  --conf-medium-bg: rgba(217, 164, 65, 0.05);
+  --conf-low:       rgba(212, 165, 116, 0.65);
+  --conf-low-bg:    rgba(212, 165, 116, 0.06);
+
+  /* STATUS CHIPS — normalized against muted severity palette */
+  --chip-error-bg:     color-mix(in oklab, #e06b5b 14%, transparent);
+  --chip-error-border: color-mix(in oklab, #e06b5b 30%, transparent);
+  --chip-warning-bg:     color-mix(in oklab, #d9a441 14%, transparent);
+  --chip-warning-border: color-mix(in oklab, #d9a441 30%, transparent);
+  --chip-success-bg:     color-mix(in oklab, #6ea583 14%, transparent);
+  --chip-success-border: color-mix(in oklab, #6ea583 30%, transparent);
+  --chip-info-bg:     color-mix(in oklab, #8aa0c7 14%, transparent);
+  --chip-info-border: color-mix(in oklab, #8aa0c7 30%, transparent);
+  --chip-ai-bg:       color-mix(in oklab, #7a8cb8 16%, transparent);
+
+  /* SHADOWS */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+  /* REVIEW SHELL */
+  --review-shell-bg: rgb(var(--bg-base-rgb));
+  --review-shell-topbar: rgb(var(--bg-base-rgb));
+  --review-panel-bg: rgb(var(--bg-surface-rgb));
+  --review-panel-alt-bg: rgb(var(--bg-surface-raised-rgb));
+  --review-panel-header-bg: rgb(var(--bg-base-rgb));
+  --review-card-bg: rgb(var(--bg-surface-rgb));
+  --review-card-hover: rgb(var(--bg-surface-raised-rgb));
+  --review-card-selected-bg: transparent;
+  --review-code-bg: rgb(var(--bg-base-rgb));
+  --review-toolbar-bg: rgb(var(--bg-surface-rgb));
+  --review-shell-border: var(--border-default);
+  --review-shell-border-strong: var(--border-strong);
+  --review-shell-divider: var(--border-muted);
+  --review-selection-glow: color-mix(in oklab, #8aa0c7 18%, transparent);
+  --review-chip-neutral-bg: color-mix(in oklab, #9aa0a6 10%, transparent);
+  --review-chip-neutral-border: color-mix(in oklab, #9aa0a6 22%, transparent);
+  --review-segment-bg: rgb(var(--bg-surface-rgb));
+  --review-segment-active-bg: rgb(var(--bg-surface-raised-rgb));
+  --review-segment-active-border: var(--border-default);
+  --review-control-hover-bg: color-mix(in oklab, #8aa0c7 8%, transparent);
+  --review-control-muted-bg: color-mix(in oklab, #9aa0a6 6%, transparent);
+  --review-primary-action-bg: var(--accent-blue);
+  --review-primary-action-border: var(--accent-blue);
+  --review-primary-action-fg: #0c0d0e;
+  --review-assistant-action-bg: linear-gradient(180deg, rgba(18, 32, 54, 0.98), rgba(8, 14, 25, 0.98));
+  --review-assistant-action-border: rgba(var(--accent-blue-rgb), 0.32);
+  --review-assistant-action-fg: var(--text-secondary);
+  --review-assistant-action-shadow: 0 6px 18px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.05);
+  --atlas-ai-mark-shadow: drop-shadow(0 6px 10px rgba(0,0,0,0.36));
+  --review-dashed-bg: color-mix(in oklab, #9aa0a6 4%, transparent);
+  --review-line-jump-bg: color-mix(in oklab, #8aa0c7 24%, transparent);
+  --review-line-jump-border: color-mix(in oklab, #8aa0c7 52%, transparent);
+  --review-line-jump-glow: color-mix(in oklab, #8aa0c7 18%, transparent);
+  --review-card-radius: 6px;
+  --review-control-radius: 5px;
+  --review-chip-shadow: none;
+  --review-topbar-shadow: none;
+  --review-panel-shadow: none;
+  --review-card-shadow-strong: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* ---- Light theme (hand-tuned) ---- */
+html.light {
+  /* SURFACES — warm off-white cluster */
+  --bg-base-rgb:       250 249 246;   /* #faf9f6 */
+  --bg-surface-rgb:    255 255 255;
+  --bg-surface-raised-rgb: 255 255 255;
+  --bg-elevated-rgb:   244 242 237;   /* #f4f2ed */
+  --bg-overlay-rgb:    238 236 230;
+  --bg-hover-rgb:      232 229 222;
+
+  --bg-base:      rgb(var(--bg-base-rgb));
+  --bg-surface:   rgb(var(--bg-surface-rgb));
+  --bg-surface-raised: rgb(var(--bg-surface-raised-rgb));
+  --bg-elevated:  rgb(var(--bg-elevated-rgb));
+  --bg-overlay:   rgb(var(--bg-overlay-rgb));
+  --bg-hover:     rgb(var(--bg-hover-rgb));
+
+  /* BORDERS */
+  --border-default: #d8d4cb;
+  --border-muted:   #e6e3dc;
+  --border-strong:  #b4afa4;
+  --border-code:    #d8d4cb;
+
+  --border-default-rgb: 216 212 203;
+  --border-muted-rgb:   230 227 220;
+  --border-strong-rgb:  180 175 164;
+
+  /* TEXT */
+  --text-primary:   #1a1b1e;
+  --text-secondary: #5a5d63;
+  --text-tertiary:  #8a8d93;
+  --text-link:      #5a74a8;
+
+  --text-primary-rgb:   26 27 30;
+  --text-secondary-rgb: 90 93 99;
+  --text-secondary-bright-rgb: 60 63 69;
+  --text-secondary-bright: rgb(var(--text-secondary-bright-rgb));
+  --text-tertiary-rgb:  138 141 147;
+  --text-link-rgb:      90 116 168;
+
+  /* ACCENT — deeper slate-blue so it reads on warm white */
+  --accent-blue:        #5a74a8;
+  --accent-blue-strong: #42588a;
+  --accent-green:       #6ea583;
+  --accent-red:         #e06b5b;
+  --accent-yellow:      #d9a441;
+  --accent-purple:      #7a8cb8;
+  --accent-orange:      #c8915e;
+
+  --accent-blue-rgb:    90 116 168;
+  --accent-green-rgb:   110 165 131;
+  --accent-red-rgb:     224 107 91;
+  --accent-yellow-rgb:  217 164 65;
+  --accent-purple-rgb:  122 140 184;
+  --accent-orange-rgb:  200 145 94;
+
+  --sev-high:   var(--accent-red);
+  --sev-med:    var(--accent-yellow);
+  --sev-low:    var(--accent-purple);
+  --sev-ok:     var(--accent-green);
+
+  /* DIFF TOKENIZER — darker variants on light bg */
+  --diff-token-keyword: #3a5591;
+  --diff-token-string:  #8a6a2e;
+  --diff-token-comment: #7a7d83;
+  --diff-token-number:  #8a6a2e;
+
+  /* DIFF RENDERING */
+  --diff-add-bg:    rgba(110, 165, 131, 0.10);
+  --diff-del-bg:    rgba(224, 107, 91, 0.10);
+  --diff-add-line:  rgba(110, 165, 131, 0.16);
+  --diff-del-line:  rgba(224, 107, 91, 0.16);
+  --diff-add-char:  rgba(26, 127, 55, 0.18);
+  --diff-del-char:  rgba(207, 34, 46, 0.16);
+  --diff-add-symbol: rgb(60, 130, 85);
+  --diff-del-symbol: rgb(190, 60, 55);
+  --diff-hunk-bg:   rgba(90, 116, 168, 0.06);
+  --diff-gutter-border: rgba(26, 27, 30, 0.08);
+
+  /* CONFIDENCE OVERLAY */
+  --conf-high:      transparent;
+  --conf-medium:    rgba(217, 164, 65, 0.50);
+  --conf-medium-bg: rgba(217, 164, 65, 0.06);
+  --conf-low:       rgba(212, 165, 116, 0.55);
+  --conf-low-bg:    rgba(212, 165, 116, 0.08);
+
+  /* STATUS CHIPS — same semantic values; color-mix adapts */
+  --chip-error-bg:     color-mix(in oklab, #e06b5b 14%, transparent);
+  --chip-error-border: color-mix(in oklab, #e06b5b 30%, transparent);
+  --chip-warning-bg:     color-mix(in oklab, #d9a441 14%, transparent);
+  --chip-warning-border: color-mix(in oklab, #d9a441 30%, transparent);
+  --chip-success-bg:     color-mix(in oklab, #6ea583 14%, transparent);
+  --chip-success-border: color-mix(in oklab, #6ea583 30%, transparent);
+  --chip-info-bg:     color-mix(in oklab, #5a74a8 14%, transparent);
+  --chip-info-border: color-mix(in oklab, #5a74a8 30%, transparent);
+  --chip-ai-bg:       color-mix(in oklab, #7a8cb8 12%, transparent);
+
+  /* SHADOWS */
+  --shadow-sm: 0 1px 2px rgba(26, 27, 30, 0.06);
+  --shadow-md: 0 4px 12px rgba(26, 27, 30, 0.08);
+  --shadow-lg: 0 8px 24px rgba(26, 27, 30, 0.12);
+
+  /* REVIEW SHELL */
+  --review-shell-bg: rgb(var(--bg-base-rgb));
+  --review-shell-topbar: rgb(var(--bg-base-rgb));
+  --review-panel-bg: rgb(var(--bg-surface-rgb));
+  --review-panel-alt-bg: rgb(var(--bg-elevated-rgb));
+  --review-panel-header-bg: rgb(var(--bg-base-rgb));
+  --review-card-bg: rgb(var(--bg-surface-rgb));
+  --review-card-hover: rgb(var(--bg-elevated-rgb));
+  --review-card-selected-bg: transparent;
+  --review-code-bg: rgb(var(--bg-base-rgb));
+  --review-toolbar-bg: rgb(var(--bg-elevated-rgb));
+  --review-shell-border: var(--border-default);
+  --review-shell-border-strong: var(--border-strong);
+  --review-shell-divider: var(--border-muted);
+  --review-selection-glow: color-mix(in oklab, #5a74a8 12%, transparent);
+  --review-chip-neutral-bg: color-mix(in oklab, #5a5d63 8%, transparent);
+  --review-chip-neutral-border: color-mix(in oklab, #5a5d63 18%, transparent);
+  --review-segment-bg: rgb(var(--bg-elevated-rgb));
+  --review-segment-active-bg: rgb(var(--bg-surface-rgb));
+  --review-segment-active-border: var(--border-default);
+  --review-control-hover-bg: color-mix(in oklab, #5a74a8 8%, transparent);
+  --review-control-muted-bg: color-mix(in oklab, #5a5d63 6%, transparent);
+  --review-primary-action-bg: var(--accent-blue-strong);
+  --review-primary-action-border: var(--accent-blue-strong);
+  --review-primary-action-fg: #ffffff;
+  --review-assistant-action-bg: linear-gradient(180deg, #ffffff 0%, #f1f4fb 100%);
+  --review-assistant-action-border: color-mix(in oklab, var(--accent-blue) 38%, var(--border-default));
+  --review-assistant-action-fg: var(--accent-blue-strong);
+  --review-assistant-action-shadow: 0 8px 18px rgba(66, 88, 138, 0.16), inset 0 1px 0 rgba(255,255,255,0.9);
+  --atlas-ai-mark-shadow: drop-shadow(0 4px 8px rgba(66, 88, 138, 0.24));
+  --review-dashed-bg: color-mix(in oklab, #5a5d63 4%, transparent);
+  --review-line-jump-bg: color-mix(in oklab, #5a74a8 16%, transparent);
+  --review-line-jump-border: color-mix(in oklab, #5a74a8 42%, transparent);
+  --review-line-jump-glow: color-mix(in oklab, #5a74a8 14%, transparent);
+  --review-card-radius: 6px;
+  --review-control-radius: 5px;
+  --review-chip-shadow: none;
+  --review-topbar-shadow: none;
+  --review-panel-shadow: none;
+  --review-card-shadow-strong: 0 6px 20px rgba(26, 27, 30, 0.08);
+}
+
+/* ---- ANIMATIONS ---- */
+@keyframes skeleton-pulse {
+  0%   { opacity: 0.4; }
+  50%  { opacity: 0.8; }
+  100% { opacity: 0.4; }
+}
+
+@keyframes atlas-pulse {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 1; }
+}
+
+@keyframes atlas-shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+
+@keyframes atlas-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes walkthrough-file-map-overlay-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

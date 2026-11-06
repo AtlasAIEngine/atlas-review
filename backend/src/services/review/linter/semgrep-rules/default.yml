@@ -1,0 +1,35 @@
+rules:
+  - id: atlas.javascript.avoid-eval
+    message: Avoid using eval(); it can introduce injection and runtime safety issues.
+    languages:
+      - javascript
+      - typescript
+    severity: WARNING
+    pattern: eval(...)
+
+  - id: atlas.javascript.avoid-shell-exec
+    message: Review shell command execution carefully; untrusted input can become command injection.
+    languages:
+      - javascript
+      - typescript
+    severity: WARNING
+    pattern-either:
+      - pattern: exec(...)
+      - pattern: execSync(...)
+      - pattern: spawn(..., { ..., shell: true, ... })
+
+  - id: atlas.python.avoid-eval
+    message: Avoid using eval(); it can introduce code execution risks.
+    languages:
+      - python
+    severity: WARNING
+    pattern: eval(...)
+
+  - id: atlas.python.subprocess-shell-true
+    message: Review subprocess shell=True usage carefully; it can allow command injection.
+    languages:
+      - python
+    severity: WARNING
+    pattern-either:
+      - pattern: subprocess.run(..., shell=True, ...)
+      - pattern: subprocess.Popen(..., shell=True, ...)

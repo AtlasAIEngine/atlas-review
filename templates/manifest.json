@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "templates": [
+    {
+      "id": "blank-react",
+      "name": "Blank React App",
+      "description": "Clean React + TypeScript + Tailwind starting point",
+      "icon": "sparkles",
+      "category": "starter",
+      "githubRepo": "AvinashP/atlas-template-blank-react",
+      "framework": "react",
+      "language": "typescript"
+    },
+    {
+      "id": "marketing-landing",
+      "name": "Marketing Agency",
+      "description": "Bold hero, services grid, testimonials, and contact CTA for agencies",
+      "icon": "megaphone",
+      "category": "marketing",
+      "githubRepo": "AvinashP/atlas-template-marketing-landing",
+      "framework": "react",
+      "language": "typescript"
+    },
+    {
+      "id": "landing-page",
+      "name": "Landing Page",
+      "description": "Hero, features, testimonials, pricing, and CTA sections",
+      "icon": "globe",
+      "category": "marketing",
+      "githubRepo": "AvinashP/atlas-template-landing-page",
+      "framework": "react",
+      "language": "typescript"
+    },
+    {
+      "id": "dashboard",
+      "name": "Dashboard",
+      "description": "Sidebar nav, KPI cards, chart, and data table",
+      "icon": "layout",
+      "category": "app",
+      "githubRepo": "AvinashP/atlas-template-dashboard",
+      "framework": "react",
+      "language": "typescript"
+    },
+    {
+      "id": "ai-chat",
+      "name": "AI Chat UI",
+      "description": "Message bubbles, streaming dots, and chat input",
+      "icon": "message-circle",
+      "category": "app",
+      "githubRepo": "AvinashP/atlas-template-ai-chat",
+      "framework": "react",
+      "language": "typescript"
+    },
+    {
+      "id": "saas-starter",
+      "name": "SaaS Starter",
+      "description": "Auth pages, dashboard, settings, sidebar shell with routing",
+      "icon": "layers",
+      "category": "app",
+      "githubRepo": "AvinashP/atlas-template-saas-starter",
+      "framework": "react",
+      "language": "typescript"
+    },
+    {
+      "id": "todo-app",
+      "name": "Todo App",
+      "description": "CRUD todos with localStorage, filters, clear completed",
+      "icon": "check-square",
+      "category": "starter",
+      "githubRepo": "AvinashP/atlas-template-todo-app",
+      "framework": "react",
+      "language": "typescript"
+    }
+  ]
+}

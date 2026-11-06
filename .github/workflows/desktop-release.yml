@@ -1,0 +1,468 @@
+name: Desktop Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'           # Stable releases: v0.19.0, v1.0.0
+      - 'v*.*.*-beta.*'    # Beta releases: v0.19.0-beta.1
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: desktop-release
+  cancel-in-progress: false
+
+env:
+  CARGO_TERM_COLOR: always
+  NODE_VERSION: '22'
+  NODE_OPTIONS: '--max-old-space-size=8192'
+  RUST_BACKTRACE: 1
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Require a matching version tag
+        run: node scripts/validate-release.mjs
+
+  # =============================================================================
+  # macOS Build Job
+  # =============================================================================
+  build-macos:
+    needs: validate
+    strategy:
+      matrix:
+        include:
+          - target: aarch64-apple-darwin
+            runner: macos-15
+            arch: aarch64
+            bundle_targets: app,dmg
+            installer_ext: dmg
+          - target: x86_64-apple-darwin
+            runner: macos-15-intel
+            arch: x86_64
+            bundle_targets: app
+            installer_ext: zip
+    runs-on: ${{ matrix.runner }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Validate Apple signing configuration
+        shell: bash
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          required_vars=(
+            APPLE_CERTIFICATE
+            APPLE_CERTIFICATE_PASSWORD
+            APPLE_ID
+            APPLE_PASSWORD
+            APPLE_TEAM_ID
+            KEYCHAIN_PASSWORD
+          )
+
+          present=0
+          missing=()
+          for var_name in "${required_vars[@]}"; do
+            if [ -n "${!var_name}" ]; then
+              present=$((present + 1))
+            else
+              missing+=("$var_name")
+            fi
+          done
+
+          if [ "$present" -eq 0 ]; then
+            echo "APPLE_SIGNING_ENABLED=false" >> "$GITHUB_ENV"
+            echo "Apple signing secrets not configured; macOS builds will remain ad-hoc signed."
+            exit 0
+          fi
+
+          if [ "${#missing[@]}" -gt 0 ]; then
+            echo "Partial Apple signing configuration detected. Missing: ${missing[*]}" >&2
+            exit 1
+          fi
+
+          echo "APPLE_SIGNING_ENABLED=true" >> "$GITHUB_ENV"
+          echo "Apple signing secrets detected; Developer ID signing and notarization will run."
+
+      - name: Import Apple signing certificate
+        if: env.APPLE_SIGNING_ENABLED == 'true'
+        shell: bash
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          CERT_PATH="$RUNNER_TEMP/apple-signing-certificate.p12"
+          KEYCHAIN_PATH="$RUNNER_TEMP/atlasengine-signing.keychain-db"
+
+          echo "$APPLE_CERTIFICATE" | base64 --decode > "$CERT_PATH"
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security default-keychain -s "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -t 3600 -u "$KEYCHAIN_PATH"
+          security import "$CERT_PATH" -k "$KEYCHAIN_PATH" -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+          CERT_INFO=$(security find-identity -v -p codesigning "$KEYCHAIN_PATH" | grep "Developer ID Application" | head -1 || true)
+          if [ -z "$CERT_INFO" ]; then
+            echo "No Developer ID Application certificate found in imported keychain." >&2
+            security find-identity -v -p codesigning "$KEYCHAIN_PATH"
+            exit 1
+          fi
+
+          CERT_ID=$(echo "$CERT_INFO" | awk -F '"' '{print $2}')
+          echo "APPLE_SIGNING_IDENTITY=$CERT_ID" >> "$GITHUB_ENV"
+          echo "APPLE_KEYCHAIN_PATH=$KEYCHAIN_PATH" >> "$GITHUB_ENV"
+          echo "Imported Apple signing identity: $CERT_ID"
+
+      - name: Cache Cargo registry
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-registry-
+
+      - name: Cache Cargo build
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: apps/desktop/src-tauri/target
+          key: ${{ runner.os }}-${{ matrix.target }}-cargo-build-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.target }}-cargo-build-
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: frontend
+
+      - name: Build frontend
+        run: npm run --prefix frontend build
+
+      - name: Install desktop build dependencies
+        run: npm ci
+        working-directory: apps/desktop
+
+      - name: Install MCP review server build dependencies
+        run: npm ci
+        working-directory: mcp-review-server
+
+      - name: Bundle backend for sidecar
+        working-directory: apps/desktop
+        run: npm run bundle-backend
+
+      - name: Scan bundled source and generate notices
+        shell: bash
+        run: |
+          node scripts/check-bundle-contents.mjs
+          node scripts/dependency-notices.mjs
+
+      - name: Add locked Tauri CLI to PATH
+        shell: bash
+        run: echo "$GITHUB_WORKSPACE/apps/desktop/node_modules/.bin" >> "$GITHUB_PATH"
+
+      - name: Pre-sign embedded macOS binaries
+        if: env.APPLE_SIGNING_ENABLED == 'true'
+        working-directory: apps/desktop
+        env:
+          APPLE_SIGNING_IDENTITY: ${{ env.APPLE_SIGNING_IDENTITY }}
+          APPLE_KEYCHAIN_PATH: ${{ env.APPLE_KEYCHAIN_PATH }}
+        run: |
+          node scripts/sign-embedded-mac-binaries.js
+
+      - name: Build Tauri app
+        if: env.APPLE_SIGNING_ENABLED != 'true'
+        working-directory: apps/desktop
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: |
+          tauri build --target ${{ matrix.target }} --bundles ${{ matrix.bundle_targets }} --config '{"build":{"beforeBuildCommand":""},"bundle":{"createUpdaterArtifacts":true}}'
+
+      - name: Build Tauri app with Apple signing
+        if: env.APPLE_SIGNING_ENABLED == 'true'
+        working-directory: apps/desktop
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_SIGNING_IDENTITY: ${{ env.APPLE_SIGNING_IDENTITY }}
+          APPLE_KEYCHAIN_PATH: ${{ env.APPLE_KEYCHAIN_PATH }}
+        run: |
+          tauri build --target ${{ matrix.target }} --bundles ${{ matrix.bundle_targets }} --config '{"build":{"beforeBuildCommand":""},"bundle":{"createUpdaterArtifacts":true}}'
+
+      - name: Get version
+        id: version
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Collect macOS artifacts
+        id: artifacts
+        run: |
+          BUNDLE_DIR="apps/desktop/src-tauri/target/${{ matrix.target }}/release/bundle"
+          VERSION=${{ steps.version.outputs.version }}
+          ARCH="${{ matrix.arch }}"
+
+          # Find and rename artifacts
+          mkdir -p artifacts
+
+          # DMG file
+          DMG_FILE=$(find "$BUNDLE_DIR/dmg" -name "*.dmg" -type f 2>/dev/null | head -1)
+          if [ -n "$DMG_FILE" ]; then
+            cp "$DMG_FILE" "artifacts/AtlasEngine-${VERSION}-macos-${ARCH}.dmg"
+          fi
+
+          # Zipped app bundle fallback for Intel macOS releases
+          APP_BUNDLE=$(find "$BUNDLE_DIR/macos" -maxdepth 1 -name "*.app" -type d 2>/dev/null | head -1)
+          if [ "${{ matrix.installer_ext }}" = "zip" ] && [ -n "$APP_BUNDLE" ]; then
+            ditto -c -k --sequesterRsrc --keepParent "$APP_BUNDLE" "artifacts/AtlasEngine-${VERSION}-macos-${ARCH}.zip"
+          fi
+
+          # App tarball for updater
+          APP_TAR=$(find "$BUNDLE_DIR/macos" -name "*.app.tar.gz" -type f 2>/dev/null | head -1)
+          if [ -n "$APP_TAR" ]; then
+            cp "$APP_TAR" "artifacts/AtlasEngine_${VERSION}_${ARCH}.app.tar.gz"
+          fi
+
+          # Signature file
+          SIG_FILE=$(find "$BUNDLE_DIR/macos" -name "*.app.tar.gz.sig" -type f 2>/dev/null | head -1)
+          if [ -n "$SIG_FILE" ]; then
+            cp "$SIG_FILE" "artifacts/AtlasEngine_${VERSION}_${ARCH}.app.tar.gz.sig"
+          fi
+
+          echo "artifact_dir=artifacts" >> $GITHUB_OUTPUT
+          cp apps/desktop/src-tauri/resources/RUST_DEPENDENCY_NOTICES.json "artifacts/RUST_DEPENDENCY_NOTICES-${{ runner.os }}-${{ runner.arch }}.json"
+          cp apps/desktop/src-tauri/resources/node-LICENSE.txt artifacts/Node-LICENSE.txt
+          cp apps/desktop/src-tauri/resources/DEPENDENCY_NOTICES.json "artifacts/DEPENDENCY_NOTICES-${{ runner.os }}-${{ runner.arch }}.json"
+          ls -la artifacts/
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: macos-${{ matrix.target }}
+          path: artifacts/*
+          if-no-files-found: error
+          retention-days: 7
+
+  # =============================================================================
+  # Windows Build Job
+  # =============================================================================
+  build-windows:
+    needs: validate
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Validate Windows signing configuration
+        shell: bash
+        env:
+          WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+          WINDOWS_TIMESTAMP_URL: ${{ secrets.WINDOWS_TIMESTAMP_URL }}
+        run: |
+          required_vars=(
+            WINDOWS_CERTIFICATE
+            WINDOWS_CERTIFICATE_PASSWORD
+          )
+
+          present=0
+          missing=()
+          for var_name in "${required_vars[@]}"; do
+            if [ -n "${!var_name}" ]; then
+              present=$((present + 1))
+            else
+              missing+=("$var_name")
+            fi
+          done
+
+          if [ "$present" -eq 0 ]; then
+            echo "WINDOWS_SIGNING_ENABLED=false" >> "$GITHUB_ENV"
+            echo "Windows code-signing secrets not configured; installers will remain unsigned."
+            exit 0
+          fi
+
+          if [ "${#missing[@]}" -gt 0 ]; then
+            echo "Partial Windows signing configuration detected. Missing: ${missing[*]}" >&2
+            exit 1
+          fi
+
+          echo "WINDOWS_SIGNING_ENABLED=true" >> "$GITHUB_ENV"
+          echo "Windows code-signing secrets detected; Authenticode signing will run."
+
+      - name: Cache Cargo registry
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-registry-
+
+      - name: Cache Cargo build
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: apps/desktop/src-tauri/target
+          key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-build-
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: frontend
+
+      - name: Build frontend
+        run: npm run --prefix frontend build
+
+      - name: Install desktop build dependencies
+        run: npm ci
+        working-directory: apps/desktop
+
+      - name: Install MCP review server build dependencies
+        run: npm ci
+        working-directory: mcp-review-server
+
+      - name: Bundle backend for sidecar
+        working-directory: apps/desktop
+        run: npm run bundle-backend
+
+      - name: Scan bundled source and generate notices
+        shell: bash
+        run: |
+          node scripts/check-bundle-contents.mjs
+          node scripts/dependency-notices.mjs
+
+      - name: Add locked Tauri CLI to PATH
+        shell: bash
+        run: echo "$GITHUB_WORKSPACE/apps/desktop/node_modules/.bin" >> "$GITHUB_PATH"
+
+      - name: Build Tauri app
+        working-directory: apps/desktop
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: |
+          tauri build --target x86_64-pc-windows-msvc --config '{"build":{"beforeBuildCommand":""},"bundle":{"createUpdaterArtifacts":true}}'
+
+      - name: Sign Windows installers
+        if: env.WINDOWS_SIGNING_ENABLED == 'true'
+        working-directory: apps/desktop
+        env:
+          WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+          WINDOWS_TIMESTAMP_URL: ${{ secrets.WINDOWS_TIMESTAMP_URL }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: |
+          node scripts/sign-windows-artifacts.js --bundle-dir src-tauri/target/x86_64-pc-windows-msvc/release/bundle
+
+      - name: Get version
+        id: version
+        shell: bash
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Collect Windows artifacts
+        id: artifacts
+        shell: bash
+        run: |
+          BUNDLE_DIR="apps/desktop/src-tauri/target/x86_64-pc-windows-msvc/release/bundle"
+          VERSION=${{ steps.version.outputs.version }}
+
+          mkdir -p artifacts
+
+          # MSI installer
+          MSI_FILE=$(find "$BUNDLE_DIR/msi" -name "*.msi" -type f 2>/dev/null | head -1)
+          if [ -n "$MSI_FILE" ]; then
+            cp "$MSI_FILE" "artifacts/AtlasEngine-${VERSION}-windows-x64.msi"
+          fi
+
+          # NSIS installer
+          NSIS_FILE=$(find "$BUNDLE_DIR/nsis" -name "*.exe" -type f 2>/dev/null | head -1)
+          if [ -n "$NSIS_FILE" ]; then
+            cp "$NSIS_FILE" "artifacts/AtlasEngine-${VERSION}-windows-x64-setup.exe"
+          fi
+
+          # Updater signature file
+          SIG_FILE=$(find "$BUNDLE_DIR/nsis" -name "*.exe.sig" -type f 2>/dev/null | head -1)
+          if [ -n "$SIG_FILE" ]; then
+            cp "$SIG_FILE" "artifacts/AtlasEngine-${VERSION}-windows-x64-setup.exe.sig"
+          fi
+
+          echo "artifact_dir=artifacts" >> $GITHUB_OUTPUT
+          cp apps/desktop/src-tauri/resources/RUST_DEPENDENCY_NOTICES.json "artifacts/RUST_DEPENDENCY_NOTICES-${{ runner.os }}-${{ runner.arch }}.json"
+          cp apps/desktop/src-tauri/resources/node-LICENSE.txt artifacts/Node-LICENSE.txt
+          cp apps/desktop/src-tauri/resources/DEPENDENCY_NOTICES.json "artifacts/DEPENDENCY_NOTICES-${{ runner.os }}-${{ runner.arch }}.json"
+          ls -la artifacts/
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: windows-x86_64
+          path: artifacts/*
+          if-no-files-found: error
+          retention-days: 7
+
+  release:
+    needs: [validate, build-macos, build-windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          path: release-artifacts
+          merge-multiple: true
+      - name: Validate artifacts and prepare draft
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: node scripts/prepare-release.mjs

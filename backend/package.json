@@ -1,0 +1,63 @@
+{
+  "name": "atlasengine-backend",
+  "version": "0.1.0",
+  "description": "AtlasEngine MVP - Backend API",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "start:railway": "node server-railway.js",
+    "dev": "nodemon server.js",
+    "desktop": "node server-desktop.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "verify:fresh-install-bootstrap": "node src/scripts/verifyFreshInstallBootstrap.js",
+    "test:branch-review": "node scripts/branch-review-workflow-harness.mjs",
+    "test:review-lifecycle-trust": "npm test -- src/utils/__tests__/reviewLifecycle.test.js src/routes/__tests__/branchReviews.reconcile.test.js src/services/__tests__/reviewPipeline.integration.test.js",
+    "test:review-speed-coverage": "npm test -- src/services/__tests__/providerService.api-first.test.js src/services/cliAdapters/__tests__/cliAdapters.test.js src/services/__tests__/reviewPipeline.integration.test.js src/services/__tests__/reviewQualityHarness.test.js src/routes/__tests__/settings.review-model-rollout.test.js",
+    "test:review-precision-grounding": "npm test -- src/services/__tests__/reviewPromptContext.test.js src/services/__tests__/reviewEvidenceValidator.test.js src/services/__tests__/reviewOutcomeService.test.js src/services/__tests__/reviewPipeline.integration.test.js src/services/__tests__/reviewQualityHarness.test.js",
+    "test:review-corroboration-calibration": "npm test -- src/services/__tests__/reviewPromptContext.test.js src/services/__tests__/reviewCorroborationService.test.js src/services/__tests__/reviewEvidenceValidator.test.js src/services/__tests__/reviewOutcomeService.test.js src/services/__tests__/reviewPipeline.integration.test.js src/services/__tests__/reviewQualityHarness.test.js",
+    "review:harness:calibrate": "node scripts/review-harness-calibration.mjs",
+    "review:harness:benchmark:pr": "node scripts/review-pr-benchmark.mjs",
+    "review:harness:benchmark:pr:matrix": "node scripts/review-pr-benchmark-matrix.mjs"
+  },
+  "keywords": [
+    "atlasengine",
+    "ai",
+    "development",
+    "platform"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@octokit/app": "^14.1.0",
+    "@octokit/rest": "^20.1.2",
+    "@octokit/webhooks": "^12.3.2",
+    "archiver": "^7.0.1",
+    "bcrypt": "^5.1.1",
+    "better-sqlite3": "^11.0.0",
+    "chokidar": "^3.6.0",
+    "cors": "^2.8.5",
+    "diff": "^8.0.3",
+    "dockerode": "^4.0.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "ioredis": "^5.3.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "pg": "^8.11.3",
+    "pixelmatch": "^7.1.0",
+    "pngjs": "^7.0.0",
+    "simple-git": "^3.30.0",
+    "socket.io": "^4.6.1",
+    "uuid": "^9.0.1",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "vitest": "^3.2.4"
+  }
+}

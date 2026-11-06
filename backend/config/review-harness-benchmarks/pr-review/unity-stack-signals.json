@@ -1,0 +1,16 @@
+{
+  "label": "unity_stack_signals",
+  "promptMetadataOverrides": {
+    "additionalPromptContextBlocks": [
+      {
+        "id": "unity_stack_signals",
+        "title": "### Atlas Local Context: Unity Stack Signals",
+        "lines": [
+          "Unity editor version: 6000.0.20f1.",
+          "Project uses UPM packages and asmdef boundaries.",
+          "Prioritize prefab or scene reference stability, lifecycle symmetry, and package or asmdef compatibility."
+        ]
+      }
+    ]
+  }
+}

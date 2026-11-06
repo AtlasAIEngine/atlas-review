@@ -1,0 +1,72 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "AtlasEngine",
+  "version": "0.25.25",
+  "identifier": "com.atlasengine.desktop",
+  "build": {
+    "frontendDist": "../../../frontend/dist",
+    "devUrl": "http://127.0.0.1:5173",
+    "beforeDevCommand": "cd ../../ && npm run --prefix frontend dev",
+    "beforeBuildCommand": "cd ../../ && npm run --prefix frontend build"
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "createUpdaterArtifacts": true,
+    "externalBin": [
+      "binaries/node"
+    ],
+    "resources": [
+      "resources/atlas-runtime-fingerprint.txt",
+      "resources/atlas-runtime-manifest.json",
+      "resources/backend/**/*",
+      "resources/shared/**/*",
+      "resources/templates/**/*",
+      "resources/mcp-review-server/**/*",
+      "resources/node-LICENSE.txt",
+      "resources/DEPENDENCY_NOTICES.json",
+      "resources/RUST_DEPENDENCY_NOTICES.json"
+    ],
+    "windows": {
+      "nsis": {
+        "installerHooks": "./windows/hooks.nsh"
+      }
+    },
+    "macOS": {
+      "entitlements": "Entitlements.plist"
+    }
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "AtlasEngine",
+        "width": 1400,
+        "height": 900,
+        "minWidth": 800,
+        "minHeight": 600,
+        "resizable": true,
+        "fullscreen": false,
+        "center": true,
+        "dragDropEnabled": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self' 'unsafe-inline' https://app.lemonsqueezy.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; worker-src 'self' blob:; connect-src 'self' ipc: http://ipc.localhost http://localhost:* http://127.0.0.1:* ws://localhost:* ws://127.0.0.1:* wss://localhost:* https://raw.githubusercontent.com https://atlasengine.dev https://*.atlasengine.dev wss://atlasengine.dev wss://*.atlasengine.dev https://api.lemonsqueezy.com; frame-src http://localhost:* http://127.0.0.1:* https://app.lemonsqueezy.com"
+    }
+  },
+  "plugins": {
+    "updater": {
+      "endpoints": [
+        "https://github.com/AtlasAIEngine/atlas-review/releases/latest/download/stable.json"
+      ],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEQ2OEQzQTEwNDNGOTdENkYKUldSdmZmbERFRHFOMXRlQXlJZlNLK2Y0Sktmd0NMZ1d3TjhsU1krZ2k3NXY0aC9pUGpDckJGeG8K"
+    }
+  }
+}

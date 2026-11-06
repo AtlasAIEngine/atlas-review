@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/atlas-icon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AtlasEngine - AI-Powered Development Platform</title>
+    <script>
+      // Apply persisted theme before first paint to prevent FOUC
+      (function(){
+        try {
+          var s = JSON.parse(localStorage.getItem('atlas-theme') || '{}');
+          var m = s && s.state && s.state.mode || 'dark';
+          var t = m === 'system'
+            ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+            : m;
+          document.documentElement.classList.add(t);
+          document.documentElement.style.colorScheme = t;
+        } catch(e) { document.documentElement.classList.add('dark'); }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://app.lemonsqueezy.com/js/lemon.js" defer></script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

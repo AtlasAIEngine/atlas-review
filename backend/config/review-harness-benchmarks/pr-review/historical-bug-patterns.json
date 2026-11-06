@@ -1,0 +1,15 @@
+{
+  "label": "historical_bug_patterns",
+  "promptMetadataOverrides": {
+    "additionalPromptContextBlocks": [
+      {
+        "id": "historical_bug_patterns",
+        "title": "### Atlas Local Context: Historical Bug Patterns",
+        "lines": [
+          "Known production regressions cluster around runtime use of editor-only APIs, package manifest and asmdef mismatches, and scene reload paths that drop event subscriptions or serialized references.",
+          "Prefer concrete bug-shaped findings over broad style advice."
+        ]
+      }
+    ]
+  }
+}

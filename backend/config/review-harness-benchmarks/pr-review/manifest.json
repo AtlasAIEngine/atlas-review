@@ -1,0 +1,39 @@
+{
+  "candidates": [
+    {
+      "id": "unity_semantic_verifier",
+      "label": "unity_semantic_verifier",
+      "source": "deterministic_evidence",
+      "description": "Unity semantic evidence pipeline with anchored verifier signals and confidence-gated promotion.",
+      "config": "../project-black/unity-semantic-verifier.json"
+    },
+    {
+      "id": "unity_stack_signals",
+      "label": "unity_stack_signals",
+      "source": "tech_stack",
+      "description": "Bounded Unity config and package signals pulled from project metadata.",
+      "config": "unity-stack-signals.json"
+    },
+    {
+      "id": "historical_review_learnings",
+      "label": "historical_review_learnings",
+      "source": "review_history",
+      "description": "Recurring review learnings distilled from prior findings on touched files.",
+      "config": "historical-review-learnings.json"
+    },
+    {
+      "id": "historical_pr_comment_learnings",
+      "label": "historical_pr_comment_learnings",
+      "source": "pr_comments",
+      "description": "Recurring PR thread patterns summarized into bounded reviewer reminders.",
+      "config": "historical-pr-comment-learnings.json"
+    },
+    {
+      "id": "historical_bug_patterns",
+      "label": "historical_bug_patterns",
+      "source": "bug_history",
+      "description": "Project bug-history patterns distilled into short regression signals.",
+      "config": "historical-bug-patterns.json"
+    }
+  ]
+}

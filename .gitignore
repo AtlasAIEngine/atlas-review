@@ -1,0 +1,113 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+playwright-report/
+test-results/
+.tmp-desktop-data-*/
+.tmp-playwright-cleanroom-*/
+*.log
+
+# Production builds
+build/
+dist/
+.next/
+**/.astro/
+**/.vercel/
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.development
+
+# Security - GitHub App private keys
+*.pem
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Claude Code
+.claude/settings.local.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.pid
+*.seed
+*.pid.lock
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Database
+*.db
+*.sqlite
+*.db-shm
+*.db-wal
+*.db-journal
+
+# Runtime provider config (machine-specific, may contain credential paths)
+.atlas-providers.json
+
+# Atlas runtime data (changesets, watcher state, verification logs)
+
+# Project specific
+/projects/*
+!/projects/.gitkeep
+/uploads/*
+!/uploads/.gitkeep
+backend/projects/
+backend/uploads/
+
+# PM2
+.pm2/
+
+# Tauri
+apps/desktop/src-tauri/target/
+apps/desktop/src-tauri/gen/schemas/
+
+# Tauri updater private key (keep secret!)
+apps/desktop/.tauri_updater_key
+/apps/desktop/test-updates/serve/
+/release-staging/
+
+# Atlas Engine
+.atlas/*
+!.atlas/review-policy.json
+
+# Local benchmark artifacts
+backend/.artifacts/
+
+# CodeGraph local index (generated; see external-codegraph-mcp-speed-benchmark-plan-2026-05)
+.codegraph/
+
+# Public source and contributor builds
+.env.*
+!.env.example
+!.env.*.example
+*.p12
+*.pfx
+*.key
+*.sqlite3
+*.sqlite-shm
+*.sqlite-wal
+*.sqlite3-shm
+*.sqlite3-wal
+.encryption-key
+release-artifacts/

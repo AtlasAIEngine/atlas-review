@@ -1,0 +1,42 @@
+[package]
+name = "atlasengine-desktop"
+version = "0.25.25"
+description = "Atlas Review - local AI code review"
+authors = ["AtlasEngine"]
+license = "MIT"
+repository = "https://github.com/AtlasAIEngine/atlas-review"
+edition = "2021"
+rust-version = "1.77.2"
+
+[lib]
+name = "atlasengine_desktop_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+log = "0.4"
+tauri = { version = "2", features = [] }
+tauri-plugin-log = "2"
+tauri-plugin-updater = "2"
+tauri-plugin-shell = "2"
+tokio = { version = "1", features = ["time"] }
+tauri-plugin-dialog = "2.6.0"
+tauri-plugin-keyring = "0.1"
+tauri-plugin-opener = "2"
+tauri-plugin-fs = "2"
+tauri-plugin-single-instance = "2.4.0"
+dunce = "1.0"
+whoami = "1"
+
+[features]
+devtools = ["tauri/devtools"]
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[target.'cfg(windows)'.dependencies]
+junction = "1.4.2"

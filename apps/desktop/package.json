@@ -1,0 +1,43 @@
+{
+  "name": "atlasengine-desktop",
+  "version": "0.25.25",
+  "private": true,
+  "description": "AtlasEngine Desktop - Native Tauri wrapper for AtlasEngine",
+  "type": "module",
+  "scripts": {
+    "stop-target-processes": "node scripts/stop-target-processes.js",
+    "predev": "node scripts/check-rust.js && npm run stop-target-processes && npm run bundle-backend",
+    "dev": "tauri dev -- --features devtools",
+    "bundle-backend": "node scripts/bundle-backend.js",
+    "prebuild": "node scripts/check-rust.js && npm run stop-target-processes && npm run bundle-backend",
+    "build": "tauri build",
+    "prebuild:local": "node scripts/check-rust.js && npm run stop-target-processes && npm run bundle-backend",
+    "build:local": "tauri build --no-bundle",
+    "prebuild:nsis": "node scripts/check-rust.js && npm run stop-target-processes && npm run bundle-backend",
+    "build:nsis": "tauri build --bundles nsis",
+    "prebuild:msi": "node scripts/check-rust.js && npm run stop-target-processes && npm run bundle-backend",
+    "build:msi": "tauri build --bundles msi",
+    "prebuild:debug": "node scripts/check-rust.js && npm run stop-target-processes && npm run bundle-backend",
+    "build:debug": "tauri build --debug",
+    "prebuild:debug:local": "node scripts/check-rust.js && npm run stop-target-processes && npm run bundle-backend",
+    "build:debug:local": "tauri build --debug --no-bundle",
+    "release:local:build": "node scripts/build-local-release.js",
+    "release:local:build:signed": "node scripts/build-local-release.js --apple-signing",
+    "release:local:publish": "node scripts/publish-local-release.js",
+    "release:mac": "bash scripts/release-mac.sh",
+    "launch:clean-install": "node scripts/launch-clean-install.js",
+    "tauri": "tauri",
+    "frontend:dev": "npm run --prefix ../../frontend dev",
+    "frontend:build": "npm run --prefix ../../frontend build",
+    "prebuild:unsigned": "node scripts/check-rust.js && npm run stop-target-processes && npm run bundle-backend",
+    "build:unsigned": "tauri build --config src-tauri/tauri.unsigned.conf.json"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0",
+    "tar": "^7.0.0"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.0.0",
+    "@tauri-apps/plugin-dialog": "^2.6.0"
+  }
+}

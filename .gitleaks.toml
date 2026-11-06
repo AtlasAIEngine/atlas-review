@@ -1,0 +1,23 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Synthetic token response fixtures in isolated provider tests"
+condition = "AND"
+paths = ['''backend/src/services/__tests__/providerService\.api-first\.test\.js$''']
+regexTarget = "line"
+regexes = ['''id_token:\s*['"]''']
+
+[[allowlists]]
+description = "Synthetic Stripe secrets used to exercise credential redaction"
+condition = "AND"
+paths = ['''backend/src/services/__tests__/verificationService\.test\.js$''']
+regexTarget = "line"
+regexes = ['''(?:lint:|expect\(excerpt\)\.not\.toContain)''']
+
+[[allowlists]]
+description = "Synthetic vulnerable code fixture inside review quality harness"
+condition = "AND"
+paths = ['''backend/src/services/reviewQualityHarness\.js$''']
+regexTarget = "line"
+regexes = ['''stripeKey:\s*['"]''']

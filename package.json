@@ -1,0 +1,28 @@
+{
+  "name": "atlas-review",
+  "private": true,
+  "scripts": {
+    "start": "node scripts/dev-review.mjs",
+    "dev": "node scripts/dev-review.mjs",
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm run dev",
+    "verify:review-lifecycle-trust": "node scripts/verify-review-lifecycle-trust.mjs",
+    "verify:review-speed-coverage": "node scripts/verify-review-speed-coverage.mjs",
+    "verify:review-precision-grounding": "node scripts/verify-review-precision-grounding.mjs",
+    "verify:review-corroboration-calibration": "node scripts/verify-review-corroboration-calibration.mjs",
+    "desktop:dev": "cd apps/desktop && npm run dev",
+    "desktop:build": "cd apps/desktop && npm run build",
+    "desktop:build:local": "cd apps/desktop && npm run build:local",
+    "desktop:build:nsis": "cd apps/desktop && npm run build:nsis",
+    "desktop:build:msi": "cd apps/desktop && npm run build:msi",
+    "desktop:build:debug": "cd apps/desktop && npm run build:debug",
+    "desktop:build:debug:local": "cd apps/desktop && npm run build:debug:local",
+    "desktop:clean-install": "cd apps/desktop && npm run launch:clean-install --",
+    "setup": "node scripts/setup.mjs",
+    "check:public": "node scripts/check-public-source.mjs",
+    "desktop:build:unsigned": "npm --prefix apps/desktop run build:unsigned"
+  },
+  "engines": {
+    "node": ">=22 <23"
+  }
+}

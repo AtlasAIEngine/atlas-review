@@ -1,0 +1,23 @@
+{
+  "version": "0.19.1",
+  "notes": "Test update for AtlasEngine Desktop\n\n- Performance improvements\n- Bug fixes",
+  "pub_date": "2026-02-03T12:00:00Z",
+  "platforms": {
+    "darwin-aarch64": {
+      "signature": "PLACEHOLDER_SIGNATURE_darwin_aarch64",
+      "url": "http://localhost:8080/AtlasEngine_0.19.1_aarch64.app.tar.gz"
+    },
+    "darwin-x86_64": {
+      "signature": "PLACEHOLDER_SIGNATURE_darwin_x86_64",
+      "url": "http://localhost:8080/AtlasEngine_0.19.1_x64.app.tar.gz"
+    },
+    "windows-x86_64": {
+      "signature": "PLACEHOLDER_SIGNATURE_windows_x86_64",
+      "url": "http://localhost:8080/AtlasEngine_0.19.1_x64-setup.exe"
+    },
+    "linux-x86_64": {
+      "signature": "PLACEHOLDER_SIGNATURE_linux_x86_64",
+      "url": "http://localhost:8080/atlasengine_0.19.1_amd64.AppImage.tar.gz"
+    }
+  }
+}

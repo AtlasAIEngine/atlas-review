@@ -1,0 +1,141 @@
+import { resolveCurrentReviewContext } from '../tools/projectContext.js';
+import { TOOL_NAMES } from '../toolNames.js';
+import type { PromptDefinition } from '../types.js';
+import {
+  getRecommendationIdentityKey,
+  normalizeRecommendations,
+  normalizeOptionalString,
+  parseLineNumber,
+} from '../utils/recommendationNormalization.js';
+import type { PromptDependencies } from './index.js';
+
+interface PromptContextArgs {
+  projectId?: string;
+  reviewType?: string;
+  branchReviewId?: string;
+  displayId?: string;
+  prReviewId?: string;
+  githubPrNumber?: string;
+}
+
+export function createReviewCurrentBranchPrompt(deps: PromptDependencies): PromptDefinition {
+  return {
+    name: 'review_current_branch',
+    description: 'Create a context-aware review brief for the currently resolved Atlas review.',
+    arguments: [
+      { name: 'projectId', description: 'Optional exact Atlas project ID override. Usually omit it so Atlas MCP resolves the current git repository.' },
+      { name: 'reviewType', description: 'Optional review target type: branch_review or pr_review.' },
+      { name: 'branchReviewId', description: 'Optional explicit branch review ID.' },
+      { name: 'displayId', description: 'Optional branch review display ID (for example BR-123).' },
+      { name: 'prReviewId', description: 'Optional explicit PR review ID.' },
+      { name: 'githubPrNumber', description: 'Optional GitHub pull request number for PR review resolution.' },
+    ],
+    handler: async (args) => {
+      const input = toPromptContextArgs(args);
+      const context = await resolveCurrentReviewContext(deps.client, deps.config, input, deps.cwd);
+
+      if (!context.review) {
+        const missingContext = {
+          project: {
+            id: context.project.id,
+            name: context.project.name,
+            gitRoot: context.gitRoot,
+          },
+          review: null,
+          nextTools: [TOOL_NAMES.runCurrent, TOOL_NAMES.status],
+        };
+
+        return {
+          description: 'No review currently resolved for this project.',
+          messages: [
+            {
+              role: 'user',
+              text: [
+                'Atlas review prompt context:',
+                toJsonBlock(missingContext),
+                'Create a short plan for bootstrapping review coverage. Mention these MCP tools explicitly:',
+                `- ${TOOL_NAMES.runCurrent}`,
+                `- ${TOOL_NAMES.status}`,
+                `- ${TOOL_NAMES.latest}`,
+              ].join('\n'),
+            },
+          ],
+        };
+      }
+
+      const reviewRecord = context.review.type === 'pr_review' && context.prReview
+        ? (await deps.client.getPrReview(context.project.id, context.prReview.id)) || context.prReview
+        : context.branchReview
+          ? (await deps.client.getBranchReview(context.project.id, context.branchReview.id)) || context.branchReview
+          : null;
+      if (!reviewRecord) {
+        throw new Error('Expected resolved review context to load a review record.');
+      }
+
+      const recommendations = normalizeRecommendations(reviewRecord.reviewJson?.recommendations)
+        .filter((item) => String(item.type || '').toLowerCase() !== 'praise')
+        .slice(0, 15)
+        .map((item) => ({
+          recommendationKey: getRecommendationIdentityKey(item),
+          severity: String(item.severity || 'unknown'),
+          type: String(item.type || 'issue'),
+          title: String(item.title || item.description || 'Untitled finding'),
+          description: String(item.description || ''),
+          file: normalizeOptionalString(item.file),
+          line: parseLineNumber(item.line),
+        }));
+
+      const promptContext = {
+        project: {
+          id: context.project.id,
+          name: context.project.name,
+          gitRoot: context.gitRoot,
+        },
+        review: {
+          ...context.review,
+          branchName: context.review.type === 'branch_review'
+            ? (reviewRecord as { branchName?: string }).branchName || null
+            : (reviewRecord as { headBranch?: string }).headBranch || null,
+          baseBranch: reviewRecord.baseBranch || null,
+          reviewStatus: reviewRecord.reviewStatus || null,
+          riskLevel: reviewRecord.reviewJson?.riskLevel || reviewRecord.reviewRiskLevel || 'unknown',
+          summary: reviewRecord.reviewJson?.summary || reviewRecord.reviewSummary || 'No review summary available.',
+        },
+        findings: recommendations,
+        nextTools: [TOOL_NAMES.file, TOOL_NAMES.outcomeGet, TOOL_NAMES.outcomeSet, TOOL_NAMES.latest, TOOL_NAMES.status],
+      };
+
+      return {
+        description: `Review brief for ${context.review.label}`,
+        messages: [
+          {
+            role: 'user',
+            text: [
+              'Atlas review prompt context:',
+              toJsonBlock(promptContext),
+              'Use the context above to produce:',
+              '1) a concise risk summary',
+              '2) prioritized top findings with rationale',
+              `3) concrete follow-up tool calls using ${TOOL_NAMES.file} and ${TOOL_NAMES.outcomeSet} with the provided recommendationKey values`,
+              '4) a short execution order for fixes',
+            ].join('\n'),
+          },
+        ],
+      };
+    },
+  };
+}
+
+function toPromptContextArgs(args: Record<string, string>): PromptContextArgs {
+  const projectId = normalizeOptionalString(args.projectId);
+  const reviewType = normalizeOptionalString(args.reviewType);
+  const branchReviewId = normalizeOptionalString(args.branchReviewId);
+  const displayId = normalizeOptionalString(args.displayId);
+  const prReviewId = normalizeOptionalString(args.prReviewId);
+  const githubPrNumber = normalizeOptionalString(args.githubPrNumber);
+  return { projectId, reviewType, branchReviewId, displayId, prReviewId, githubPrNumber };
+}
+
+function toJsonBlock(value: unknown): string {
+  return ['```json', JSON.stringify(value, null, 2), '```'].join('\n');
+}

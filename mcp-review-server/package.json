@@ -1,0 +1,27 @@
+{
+  "name": "atlas-review-mcp-server",
+  "version": "0.1.1",
+  "private": true,
+  "type": "module",
+  "main": "dist/src/index.js",
+  "bin": {
+    "atlas-review-mcp": "dist/bin/atlas-review-mcp.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/bin/atlas-review-mcp.js",
+    "test": "npm run build && node --test tests/**/*.test.mjs dist/src/setup/__tests__/*.test.js",
+    "verify:setup-docs": "node --test --test-name-pattern=\"setup-docs|public-api|runSetupCli|configGenerator|configWriter\" tests/setup-docs.test.mjs tests/public-api.test.mjs dist/src/setup/__tests__/cli.test.js dist/src/setup/__tests__/configGenerator.test.js dist/src/setup/__tests__/configWriter.test.js",
+    "mcp:doctor": "node ./bin/atlas-review-mcp-doctor.js",
+    "setup": "node dist/bin/atlas-review-mcp.js setup",
+    "setup:list": "node dist/bin/atlas-review-mcp.js setup --list",
+    "setup:dry-run": "node dist/bin/atlas-review-mcp.js setup --auto --dry-run"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.30",
+    "typescript": "^5.7.3"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "label": "historical_pr_comment_learnings",
+  "promptMetadataOverrides": {
+    "additionalPromptContextBlocks": [
+      {
+        "id": "historical_pr_comment_learnings",
+        "title": "### Atlas Local Context: Historical PR Comment Learnings",
+        "lines": [
+          "Review threads commonly reopen when prefab or scene edits silently break serialized references or when runtime code starts depending on editor-only APIs.",
+          "Check whether the diff changes object wiring, execution order assumptions, or editor versus runtime boundaries."
+        ]
+      }
+    ]
+  }
+}

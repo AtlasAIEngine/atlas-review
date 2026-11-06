@@ -1,0 +1,23 @@
+{
+  "version": "0.20.0-beta.1",
+  "notes": "Beta release of AtlasEngine Desktop 0.20\n\n## New Features\n- Auto-updater UI\n- Update channel selection (stable/beta)\n\n## Known Issues\n- May have rough edges",
+  "pub_date": "2026-02-03T14:00:00Z",
+  "platforms": {
+    "darwin-aarch64": {
+      "signature": "PLACEHOLDER_SIGNATURE_darwin_aarch64",
+      "url": "http://localhost:8080/AtlasEngine_0.20.0-beta.1_aarch64.app.tar.gz"
+    },
+    "darwin-x86_64": {
+      "signature": "PLACEHOLDER_SIGNATURE_darwin_x86_64",
+      "url": "http://localhost:8080/AtlasEngine_0.20.0-beta.1_x64.app.tar.gz"
+    },
+    "windows-x86_64": {
+      "signature": "PLACEHOLDER_SIGNATURE_windows_x86_64",
+      "url": "http://localhost:8080/AtlasEngine_0.20.0-beta.1_x64-setup.exe"
+    },
+    "linux-x86_64": {
+      "signature": "PLACEHOLDER_SIGNATURE_linux_x86_64",
+      "url": "http://localhost:8080/atlasengine_0.20.0-beta.1_amd64.AppImage.tar.gz"
+    }
+  }
+}
