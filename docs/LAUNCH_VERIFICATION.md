@@ -14,6 +14,7 @@ Atlas Review is prepared from the working source snapshot identified in SOURCE_M
 - New model catalog, CLI arguments, API request shape, and pricing-tier boundary checks passed.
 - Redacted Gitleaks scans passed for the selected source and new Git history, using narrow exceptions for verified synthetic fixtures.
 - Tracked-file checks and public documentation link checks passed.
+- A fresh-profile browser dashboard opened without JavaScript errors or backend 5xx responses. The README screenshot uses that empty profile.
 
 [Launch CI checks](https://github.com/AtlasAIEngine/atlas-review/actions/runs/42182882937) passed for source commit `8e457674dab5fa137ca32228f2f1943a34d6b8dd`. Installer provenance is recorded separately in each release's SOURCE.json.
 

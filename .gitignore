@@ -63,7 +63,7 @@ lerna-debug.log*
 *.db-journal
 
 # Runtime provider config (machine-specific, may contain credential paths)
-.atlas-providers.json
+.atlas-providers.json*
 
 # Atlas runtime data (changesets, watcher state, verification logs)
 

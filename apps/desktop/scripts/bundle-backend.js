@@ -87,7 +87,7 @@ const SENSITIVE_EXTENSIONS = [
 // IMPORTANT: Must match the system Node.js version used for `npm install`
 // to ensure native modules (like better-sqlite3) have compatible bindings.
 function isSensitiveFilename(name) {
-  return SENSITIVE_FILENAMES.has(name) || /^\.env(?:\.|$)/.test(name)
+  return SENSITIVE_FILENAMES.has(name) || name.startsWith('.atlas-providers.json.') || /^\.env(?:\.|$)/.test(name)
     || /\.(?:db|sqlite|sqlite3)(?:-(?:wal|shm|journal))?$/.test(name)
     || name === '.tauri_updater_key';
 }

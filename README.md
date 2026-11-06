@@ -4,6 +4,8 @@ Local-first AI code review for branches and pull requests, with a desktop app an
 
 [Windows x64](https://github.com/AtlasAIEngine/atlas-review/releases/latest/download/AtlasReview-windows-x64-setup.exe) | [Mac Apple Silicon](https://github.com/AtlasAIEngine/atlas-review/releases/latest/download/AtlasReview-macos-aarch64.dmg) | [Mac Intel](https://github.com/AtlasAIEngine/atlas-review/releases/latest/download/AtlasReview-macos-x86_64.zip) | [All releases](https://github.com/AtlasAIEngine/atlas-review/releases)
 
+![Atlas Review project dashboard on a fresh profile](docs/assets/dashboard.png)
+
 ## What it does
 
 - Review local branches and GitHub pull requests with configured AI providers.
@@ -30,7 +32,7 @@ npm run setup
 npm run dev
 ```
 
-Open the URL printed by Vite (normally `http://127.0.0.1:5173`). The backend listens on localhost and uses SQLite. Docker, PostgreSQL, Redis, cloud accounts, and signing keys are not required for local review. Compiler tools may be required if native Node dependencies cannot use a prebuilt binary. The setup command installs dependencies from the included lockfiles and builds the MCP server.
+Open the URL printed by Vite (normally `http://127.0.0.1:5173`) and choose **Open App** on your first visit. The backend listens on localhost and uses SQLite. Docker, PostgreSQL, Redis, cloud accounts, and signing keys are not required for local review. Compiler tools may be required if native Node dependencies cannot use a prebuilt binary. The setup command installs dependencies from the included lockfiles and builds the MCP server.
 
 Development shares the existing app data directory by default. To use an isolated profile, set `ATLAS_DATA_DIR` to an absolute writable directory before launching. Runtime configuration is in that profile's `.env`; never commit it. See [configuration](docs/CONFIGURATION.md).
 
