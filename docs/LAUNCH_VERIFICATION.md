@@ -34,7 +34,7 @@ Interactive Windows installation and upgrade testing is deferred to the maintain
 
 ## Legacy downloads
 
-The old 0.25.24 Mac updater package contained internal benchmark artifacts. It is not mirrored into this repository. The maintainer authorized removal of old installer downloads after clean replacements are verified. The legacy updater feed now points to the verified 0.25.26 assets in the new repository. The legacy README and latest release direct users to Atlas Review. Old installer assets are retired after the new public download links and compatibility feed are verified.
+The old 0.25.24 Mac updater package contained internal benchmark artifacts. It is not mirrored into this repository. The maintainer authorized removal of old installer downloads after clean replacements are verified. The legacy updater feed now points to the verified 0.25.26 assets in the new repository. The legacy README and latest release direct users to Atlas Review. After verifying the new public download links and compatibility feed, all 335 installer and signature assets from 39 legacy releases were removed. Legacy release metadata and the compatibility feed remain available.
 
 ## Dependency audit
 
@@ -42,4 +42,4 @@ At launch preparation on 2026-11-06, npm audit reported no high or critical advi
 
 ## Repository publication
 
-The repository is public under the MIT license, with fresh source history. GitHub private vulnerability reporting, secret scanning, and secret scanning push protection are enabled. Main requires the source and build checks, with force pushes and branch deletion disabled. Signing credentials are stored in GitHub Actions secrets, outside tracked source.
+The repository is public under the MIT license, with fresh source history. GitHub private vulnerability reporting, secret scanning, and secret scanning push protection are enabled. Main requires the source and build checks, with force pushes and branch deletion disabled. Signing credentials are stored in GitHub Actions secrets, outside tracked source. GitHub secret scanning identified the deliberately vulnerable Stripe-shaped sample in the review-quality harness; the alert was resolved as used in tests after inspecting its fixture context. No production credential was involved.
